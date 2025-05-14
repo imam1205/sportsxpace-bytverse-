@@ -1,0 +1,110 @@
+{% extends "base.html" %} {% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="form-container">
+        <h2 class="text-center mb-4">Edit Lapangan</h2>
+
+        <form method="POST" action="" enctype="multipart/form-data">
+          {{ form.hidden_tag() }}
+
+          <div class="mb-3">
+            {{ form.nama_lapangan.label(class="form-label") }} {% if
+            form.nama_lapangan.errors %} {{
+            form.nama_lapangan(class="form-control is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.nama_lapangan.errors %} {{ error }} {% endfor
+              %}
+            </div>
+            {% else %} {{ form.nama_lapangan(class="form-control") }} {% endif
+            %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.jenis_olahraga.label(class="form-label") }} {% if
+            form.jenis_olahraga.errors %} {{
+            form.jenis_olahraga(class="form-select is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.jenis_olahraga.errors %} {{ error }} {%
+              endfor %}
+            </div>
+            {% else %} {{ form.jenis_olahraga(class="form-select") }} {% endif
+            %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.harga.label(class="form-label") }}
+            <div class="input-group">
+              <span class="input-group-text">Rp</span>
+              {% if form.harga.errors %} {{ form.harga(class="form-control
+              is-invalid") }}
+              <div class="invalid-feedback">
+                {% for error in form.harga.errors %} {{ error }} {% endfor %}
+              </div>
+              {% else %} {{ form.harga(class="form-control") }} {% endif %}
+            </div>
+            <div class="form-text">Harga per jam.</div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              {{ form.jam_operasional_buka.label(class="form-label") }} {% if
+              form.jam_operasional_buka.errors %} {{
+              form.jam_operasional_buka(class="form-control is-invalid") }}
+              <div class="invalid-feedback">
+                {% for error in form.jam_operasional_buka.errors %} {{ error }}
+                {% endfor %}
+              </div>
+              {% else %} {{ form.jam_operasional_buka(class="form-control") }}
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              {{ form.jam_operasional_tutup.label(class="form-label") }} {% if
+              form.jam_operasional_tutup.errors %} {{
+              form.jam_operasional_tutup(class="form-control is-invalid") }}
+              <div class="invalid-feedback">
+                {% for error in form.jam_operasional_tutup.errors %} {{ error }}
+                {% endfor %}
+              </div>
+              {% else %} {{ form.jam_operasional_tutup(class="form-control") }}
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="mb-4">
+            {{ form.gambar_url.label(class="form-label") }} {% if
+            form.gambar_url.errors %} {{ form.gambar_url(class="form-control
+            is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.gambar_url.errors %} {{ error }} {% endfor %}
+            </div>
+            {% else %} {{ form.gambar_url(class="form-control") }} {% endif %}
+            <div class="form-text">
+              Masukkan URL gambar untuk lapangan Anda.
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <h5>Preview Gambar</h5>
+            <img
+              src="{{ lapangan.gambar_url }}"
+              alt="{{ lapangan.nama_lapangan }}"
+              class="img-fluid rounded mb-3"
+              style="max-height: 200px"
+            />
+          </div>
+
+          <div class="d-grid gap-2">
+            {{ form.submit(class="btn btn-primary btn-lg") }}
+            <a
+              href="{{ url_for('owner.lapangans') }}"
+              class="btn btn-outline-secondary"
+              >Batal</a
+            >
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

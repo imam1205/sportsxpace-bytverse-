@@ -1,122 +1,135 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container my-5">
-    <h1 class="mb-4">Dashboard Pemilik Lapangan</h1>
-    
-    <div class="row mb-4">
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="dashboard-stat">
-                <h3>Total Lapangan</h3>
-                <div class="number">{{ lapangans|length }}</div>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="dashboard-stat">
-                <h3>Booking Bulan Ini</h3>
-                <div class="number">{{ bookings_this_month }}</div>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="dashboard-stat">
-                <h3>Total Pendapatan</h3>
-                <div class="number">Rp {{ revenue|int|format_number }}</div>
-            </div>
-        </div>
+  <h1 class="mb-4">Dashboard Pemilik Lapangan</h1>
+
+  <div class="row mb-4">
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="dashboard-stat">
+        <h3>Total Lapangan</h3>
+        <div class="number">{{ lapangans|length }}</div>
+      </div>
     </div>
-    
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="dashboard-table">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="mb-0">Booking Terbaru</h3>
-                    <a href="{{ url_for('owner.bookings') }}" class="btn btn-outline-primary">Lihat Semua</a>
-                </div>
-                
-                {% if recent_bookings %}
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Tanggal</th>
-                                    <th>Jam</th>
-                                    <th>Lapangan</th>
-                                    <th>Pembeli</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for booking, lapangan, user in recent_bookings %}
-                                <tr>
-                                    <td>{{ booking.tanggal_booking.strftime('%d/%m/%Y') }}</td>
-                                    <td>{{ booking.jam_booking_mulai.strftime('%H:%M') }} - {{ booking.jam_booking_selesai.strftime('%H:%M') }}</td>
-                                    <td>{{ lapangan.nama_lapangan }}</td>
-                                    <td>{{ user.nama }}</td>
-                                    <td>
-                                        <span class="status-badge status-{{ booking.status.lower() }}">
-                                            {{ booking.status }}
-                                        </span>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% else %}
-                    <div class="alert alert-info">Belum ada booking yang masuk.</div>
-                {% endif %}
-            </div>
-        </div>
-        
-        <div class="col-lg-4">
-            <div class="dashboard-table">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="mb-0">Lapangan Saya</h3>
-                    <a href="{{ url_for('owner.lapangans') }}" class="btn btn-outline-primary">Kelola</a>
-                </div>
-                
-                {% if lapangans %}
-                    <div class="list-group">
-                        {% for lapangan in lapangans %}
-                            <a href="{{ url_for('customer.field_detail', field_id=lapangan.id) }}" class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">{{ lapangan.nama_lapangan }}</h5>
-                                    <span class="badge bg-primary">{{ lapangan.jenis_olahraga }}</span>
-                                </div>
-                                <p class="mb-1">
-                                    <strong>Harga:</strong> {{ lapangan.formatted_price }} / jam
-                                </p>
-                            </a>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="alert alert-info">
-                        Anda belum memiliki lapangan.
-                        <a href="{{ url_for('owner.add_lapangan') }}" class="alert-link">Tambahkan lapangan sekarang</a>.
-                    </div>
-                {% endif %}
-                
-                <div class="d-grid mt-3">
-                    <a href="{{ url_for('owner.add_lapangan') }}" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i> Tambah Lapangan
-                    </a>
-                </div>
-            </div>
-            
-            <div class="dashboard-table mt-4">
-                <h3 class="mb-3">Informasi Toko</h3>
-                <div class="mb-2">
-                    <strong>Nama Toko:</strong> {{ toko.nama_toko }}
-                </div>
-                <div class="mb-2">
-                    <strong>Lokasi:</strong> {{ toko.lokasi }}
-                </div>
-                <div>
-                    <strong>Deskripsi:</strong>
-                    <p>{{ toko.deskripsi or 'Tidak ada deskripsi' }}</p>
-                </div>
-            </div>
-        </div>
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="dashboard-stat">
+        <h3>Booking Bulan Ini</h3>
+        <div class="number">{{ bookings_this_month }}</div>
+      </div>
     </div>
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="dashboard-stat">
+        <h3>Total Pendapatan</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="dashboard-table">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="mb-0">Booking Terbaru</h3>
+          <a
+            href="{{ url_for('owner.bookings') }}"
+            class="btn btn-outline-primary"
+            >Lihat Semua</a
+          >
+        </div>
+
+        {% if recent_bookings %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>Jam</th>
+                <th>Lapangan</th>
+                <th>Pembeli</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for booking, lapangan, user in recent_bookings %}
+              <tr>
+                <td>{{ booking.tanggal_booking.strftime('%d/%m/%Y') }}</td>
+                <td>
+                  {{ booking.jam_booking_mulai.strftime('%H:%M') }} - {{
+                  booking.jam_booking_selesai.strftime('%H:%M') }}
+                </td>
+                <td>{{ lapangan.nama_lapangan }}</td>
+                <td>{{ user.nama }}</td>
+                <td>
+                  <span
+                    class="status-badge status-{{ booking.status.lower() }}"
+                  >
+                    {{ booking.status }}
+                  </span>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">Belum ada booking yang masuk.</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="dashboard-table">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="mb-0">Lapangan Saya</h3>
+          <a
+            href="{{ url_for('owner.lapangans') }}"
+            class="btn btn-outline-primary"
+            >Kelola</a
+          >
+        </div>
+
+        {% if lapangans %}
+        <div class="list-group">
+          {% for lapangan in lapangans %}
+          <a
+            href="{{ url_for('customer.field_detail', field_id=lapangan.id) }}"
+            class="list-group-item list-group-item-action"
+          >
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{ lapangan.nama_lapangan }}</h5>
+              <span class="badge bg-primary"
+                >{{ lapangan.jenis_olahraga }}</span
+              >
+            </div>
+            <p class="mb-1">
+              <strong>Harga:</strong> {{ lapangan.formatted_price }} / jam
+            </p>
+          </a>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+          Anda belum memiliki lapangan.
+          <a href="{{ url_for('owner.add_lapangan') }}" class="alert-link"
+            >Tambahkan lapangan sekarang</a
+          >.
+        </div>
+        {% endif %}
+
+        <div class="d-grid mt-3">
+          <a href="{{ url_for('owner.add_lapangan') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i> Tambah Lapangan
+          </a>
+        </div>
+      </div>
+
+      <div class="dashboard-table mt-4">
+        <h3 class="mb-3">Informasi Toko</h3>
+        <div class="mb-2"><strong>Nama Toko:</strong> {{ toko.nama_toko }}</div>
+        <div class="mb-2"><strong>Lokasi:</strong> {{ toko.lokasi }}</div>
+        <div>
+          <strong>Deskripsi:</strong>
+          <p>{{ toko.deskripsi or 'Tidak ada deskripsi' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

@@ -7,6 +7,10 @@ from sqlalchemy.orm import DeclarativeBase
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_login import LoginManager
 
+from dotenv import load_dotenv
+# Muat variabel lingkungan dari file .env
+load_dotenv()
+
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -24,10 +28,10 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)  # needed for url_for
 # Configure the database
 database_url = os.environ.get("DATABASE_URL", "postgresql://{}:{}@{}:{}/{}".format(
     os.environ.get("PGUSER", "postgres"),
-    os.environ.get("PGPASSWORD", "postgres"),
+    os.environ.get("PGPASSWORD", "Kntl1205"),
     os.environ.get("PGHOST", "localhost"),
     os.environ.get("PGPORT", "5432"),
-    os.environ.get("PGDATABASE", "sportfield")
+    os.environ.get("PGDATABASE", "sportsxpace")
 ))
 
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
