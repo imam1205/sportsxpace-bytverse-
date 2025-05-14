@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Kelola Lapangan</h1>
+        <a href="{{ url_for('owner.add_lapangan') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i> Tambah Lapangan
+        </a>
+    </div>
+    
+    <!-- Fields List -->
+    <div class="row">
+        {% if lapangans %}
+            {% for lapangan in lapangans %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <img src="{{ lapangan.gambar_url }}" class="card-img-top" alt="{{ lapangan.nama_lapangan }}" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ lapangan.nama_lapangan }}</h5>
+                            <span class="badge bg-primary mb-2">{{ lapangan.jenis_olahraga }}</span>
+                            
+                            <p class="card-text">
+                                <strong>Harga:</strong> {{ lapangan.formatted_price }} / jam
+                            </p>
+                            <p class="card-text">
+                                <strong>Jam Operasional:</strong> {{ lapangan.jam_operasional_buka.strftime('%H:%M') }} - {{ lapangan.jam_operasional_tutup.strftime('%H:%M') }}
+                            </p>
+                            
+                            <div class="d-flex mt-3">
+                                <a href="{{ url_for('customer.field_detail', field_id=lapangan.id) }}" class="btn btn-outline-primary me-2">
+                                    <i class="fas fa-eye me-1"></i> Lihat
+                                </a>
+                                <a href="{{ url_for('owner.edit_lapangan', lapangan_id=lapangan.id) }}" class="btn btn-outline-secondary me-2">
+                                    <i class="fas fa-edit me-1"></i> Edit
+                                </a>
+                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ lapangan.id }}">
+                                    <i class="fas fa-trash-alt me-1"></i> Hapus
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Rating info -->
+                        <div class="card-footer bg-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="star-rating" data-rating="{{ lapangan.average_rating }}"></span>
+                                    <small class="text-muted">({{ lapangan.ratings|length }} reviews)</small>
+                                </div>
+                                <small class="text-muted">{{ lapangan.pemesanans|length }} bookings</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteModal{{ lapangan.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Konfirmasi Hapus</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Apakah Anda yakin ingin menghapus lapangan <strong>{{ lapangan.nama_lapangan }}</strong>?</p>
+                                    <p class="text-danger">Perhatian: Tindakan ini tidak dapat dibatalkan dan akan menghapus semua data terkait lapangan ini.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <form action="{{ url_for('owner.delete_lapangan', lapangan_id=lapangan.id) }}" method="POST">
+                                        <button type="submit" class="btn btn-danger">Hapus</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <h4 class="alert-heading">Belum ada lapangan!</h4>
+                    <p>Anda belum menambahkan lapangan olahraga. Silakan tambahkan lapangan pertama Anda.</p>
+                    <hr>
+                    <a href="{{ url_for('owner.add_lapangan') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i> Tambah Lapangan Sekarang
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

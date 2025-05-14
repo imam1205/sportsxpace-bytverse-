@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Search Hero Section -->
+<section class="bg-primary text-white py-4 mb-4">
+    <div class="container">
+        <h1 class="mb-3">Cari Lapangan Olahraga</h1>
+        <form action="{{ url_for('customer.fields') }}" method="GET" id="filter-form">
+            <div class="row g-2">
+                <div class="col-lg-6">
+                    <input type="text" name="search" class="form-control" placeholder="Cari lapangan..." value="{{ search }}">
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <select name="sport_type" class="form-select">
+                        <option value="">Semua Olahraga</option>
+                        {% for type in sport_types %}
+                            <option value="{{ type[0] }}" {% if sport_type == type[0] %}selected{% endif %}>{{ type[0] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <select name="location" class="form-select">
+                        <option value="">Semua Lokasi</option>
+                        {% for loc in locations %}
+                            <option value="{{ loc[0] }}" {% if location == loc[0] %}selected{% endif %}>{{ loc[0] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <button type="submit" class="btn btn-light w-100">
+                        <i class="fas fa-search me-2"></i> Cari
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<div class="container mb-5">
+    <!-- Advanced Filter Section -->
+    <div class="filter-section mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Filter Lanjutan</h5>
+            <button class="btn btn-sm btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#advancedFilter">
+                <i class="fas fa-sliders-h me-1"></i> Tampilkan/Sembunyikan
+            </button>
+        </div>
+        
+        <div class="collapse" id="advancedFilter">
+            <form action="{{ url_for('customer.fields') }}" method="GET" class="row g-3">
+                <input type="hidden" name="search" value="{{ search }}">
+                <input type="hidden" name="sport_type" value="{{ sport_type }}">
+                <input type="hidden" name="location" value="{{ location }}">
+                
+                <div class="col-md-6">
+                    <label class="form-label">Rentang Harga (per jam)</label>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="number" name="price_min" class="form-control" placeholder="Min" value="{{ price_min }}">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="number" name="price_max" class="form-control" placeholder="Max" value="{{ price_max }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">Terapkan Filter</button>
+                    <a href="{{ url_for('customer.fields') }}" class="btn btn-outline-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Results Section -->
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h2>Hasil Pencarian</h2>
+            <p class="text-muted">Ditemukan {{ results|length }} lapangan</p>
+        </div>
+        
+        {% if results %}
+            {% for lapangan, toko in results %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <img src="{{ lapangan.gambar_url }}" class="card-img-top" alt="{{ lapangan.nama_lapangan }}" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ lapangan.nama_lapangan }}</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary">{{ lapangan.jenis_olahraga }}</span>
+                                <div class="star-rating" data-rating="{{ lapangan.average_rating }}"></div>
+                            </div>
+                            
+                            <p class="card-text text-muted mb-2">
+                                <i class="fas fa-store me-1"></i> {{ toko.nama_toko }}
+                            </p>
+                            <p class="card-text text-muted mb-2">
+                                <i class="fas fa-map-marker-alt me-1"></i> {{ toko.lokasi }}
+                            </p>
+                            <p class="card-text text-muted mb-2">
+                                <i class="fas fa-clock me-1"></i> {{ lapangan.jam_operasional_buka.strftime('%H:%M') }} - {{ lapangan.jam_operasional_tutup.strftime('%H:%M') }}
+                            </p>
+                            <p class="card-price mb-3">{{ lapangan.formatted_price }} / jam</p>
+                            
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('customer.field_detail', field_id=lapangan.id) }}" class="btn btn-primary">
+                                    Lihat Detail
+                                </a>
+                                {% if current_user.is_authenticated and current_user.role == 'Pembeli' %}
+                                    <a href="{{ url_for('customer.book_field', field_id=lapangan.id) }}" class="btn btn-outline-primary">
+                                        <i class="fas fa-calendar-check me-1"></i> Booking Sekarang
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <h4 class="alert-heading">Tidak ada hasil!</h4>
+                    <p>Maaf, tidak ada lapangan yang sesuai dengan kriteria pencarian Anda. Silakan coba dengan filter yang berbeda.</p>
+                    <hr>
+                    <a href="{{ url_for('customer.fields') }}" class="btn btn-primary">
+                        Lihat Semua Lapangan
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

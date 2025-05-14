@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="form-container">
+                <h2 class="text-center mb-4">{{ 'Edit Ulasan' if is_update else 'Beri Ulasan' }}</h2>
+                
+                <!-- Field Info -->
+                <div class="mb-4">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="{{ lapangan.gambar_url }}" alt="{{ lapangan.nama_lapangan }}" class="img-fluid rounded-start" style="height: 100%; object-fit: cover;">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ lapangan.nama_lapangan }}</h5>
+                                    <p class="card-text">
+                                        <span class="badge bg-primary">{{ lapangan.jenis_olahraga }}</span>
+                                    </p>
+                                    <p class="card-text">
+                                        <i class="fas fa-store me-1"></i> {{ lapangan.toko.nama_toko }}<br>
+                                        <i class="fas fa-map-marker-alt me-1"></i> {{ lapangan.toko.lokasi }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rating Form -->
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-4">
+                        <label class="form-label">{{ form.skor.label }}</label>
+                        <div class="star-rating-input mb-2">
+                            {% for value, label in form.skor.choices %}
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="skor" id="skor_{{ value }}" value="{{ value }}" {% if form.skor.data == value %}checked{% endif %} required>
+                                    <label class="form-check-label" for="skor_{{ value }}">
+                                        {{ label }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Star Rating Visual Representation -->
+                        <div class="rating-stars-container mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="far fa-star star-rating-input-icon" data-value="1"></i>
+                                    <i class="far fa-star star-rating-input-icon" data-value="2"></i>
+                                    <i class="far fa-star star-rating-input-icon" data-value="3"></i>
+                                    <i class="far fa-star star-rating-input-icon" data-value="4"></i>
+                                    <i class="far fa-star star-rating-input-icon" data-value="5"></i>
+                                </div>
+                                <div id="rating-text">Pilih rating</div>
+                            </div>
+                        </div>
+                        
+                        {% if form.skor.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.skor.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        {{ form.komentar.label(class="form-label") }}
+                        {% if form.komentar.errors %}
+                            {{ form.komentar(class="form-control is-invalid", rows=4) }}
+                            <div class="invalid-feedback">
+                                {% for error in form.komentar.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.komentar(class="form-control", rows=4, placeholder="Bagikan pengalaman Anda menggunakan lapangan ini") }}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                        <a href="{{ url_for('customer.field_detail', field_id=lapangan.id) }}" class="btn btn-outline-secondary">Batal</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const starIcons = document.querySelectorAll('.star-rating-input-icon');
+        const radioInputs = document.querySelectorAll('input[name="skor"]');
+        const ratingText = document.getElementById('rating-text');
+        
+        const ratingTexts = {
+            1: 'Sangat Buruk',
+            2: 'Buruk',
+            3: 'Cukup',
+            4: 'Bagus',
+            5: 'Sangat Bagus'
+        };
+        
+        // Initialize stars based on current radio selection
+        function updateStarsFromRadio() {
+            let selectedValue = 0;
+            for (const radio of radioInputs) {
+                if (radio.checked) {
+                    selectedValue = parseInt(radio.value);
+                    break;
+                }
+            }
+            
+            updateStars(selectedValue);
+        }
+        
+        // Update stars visual based on rating value
+        function updateStars(value) {
+            starIcons.forEach(star => {
+                const starValue = parseInt(star.dataset.value);
+                if (starValue <= value) {
+                    star.classList.remove('far');
+                    star.classList.add('fas');
+                } else {
+                    star.classList.remove('fas');
+                    star.classList.add('far');
+                }
+            });
+            
+            // Update rating text
+            if (value > 0) {
+                ratingText.textContent = ratingTexts[value];
+            } else {
+                ratingText.textContent = 'Pilih rating';
+            }
+        }
+        
+        // Add click event to stars
+        starIcons.forEach(star => {
+            star.addEventListener('click', function() {
+                const value = parseInt(this.dataset.value);
+                
+                // Update radio button
+                for (const radio of radioInputs) {
+                    if (parseInt(radio.value) === value) {
+                        radio.checked = true;
+                        break;
+                    }
+                }
+                
+                updateStars(value);
+            });
+            
+            // Add hover effect
+            star.addEventListener('mouseenter', function() {
+                const value = parseInt(this.dataset.value);
+                
+                starIcons.forEach(s => {
+                    const starValue = parseInt(s.dataset.value);
+                    if (starValue <= value) {
+                        s.classList.remove('far');
+                        s.classList.add('fas');
+                    } else {
+                        s.classList.remove('fas');
+                        s.classList.add('far');
+                    }
+                });
+                
+                ratingText.textContent = ratingTexts[value];
+            });
+        });
+        
+        // Add mouseleave event to container to reset to selected value
+        document.querySelector('.rating-stars-container').addEventListener('mouseleave', updateStarsFromRadio);
+        
+        // Initialize stars
+        updateStarsFromRadio();
+        
+        // Add change event to radio buttons
+        radioInputs.forEach(radio => {
+            radio.addEventListener('change', updateStarsFromRadio);
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h1 class="text-center mb-5">Hubungi Kami</h1>
+            
+            <div class="row mb-5">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title mb-4">Kirim Pesan</h3>
+                            <form id="contact-form">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nama Lengkap</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="subject" class="form-label">Subjek</label>
+                                    <input type="text" class="form-control" id="subject" name="subject" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="message" class="form-label">Pesan</label>
+                                    <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">Kirim Pesan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title mb-4">Informasi Kontak</h3>
+                            <div class="mb-4">
+                                <h5><i class="fas fa-map-marker-alt me-2 text-primary"></i> Alamat</h5>
+                                <p>Jl. Olahraga No. 123<br>Jakarta Selatan, 12345<br>Indonesia</p>
+                            </div>
+                            <div class="mb-4">
+                                <h5><i class="fas fa-phone me-2 text-primary"></i> Telepon</h5>
+                                <p>+62 (021) 1234-5678</p>
+                            </div>
+                            <div class="mb-4">
+                                <h5><i class="fas fa-envelope me-2 text-primary"></i> Email</h5>
+                                <p>info@sportfield.com<br>support@sportfield.com</p>
+                            </div>
+                            <div class="mb-4">
+                                <h5><i class="fas fa-clock me-2 text-primary"></i> Jam Operasional</h5>
+                                <p>Senin - Jumat: 08:00 - 17:00<br>Sabtu: 09:00 - 15:00<br>Minggu: Tutup</p>
+                            </div>
+                            <div>
+                                <h5><i class="fas fa-hashtag me-2 text-primary"></i> Sosial Media</h5>
+                                <div class="d-flex gap-3 fs-3">
+                                    <a href="#" class="text-primary"><i class="fab fa-facebook"></i></a>
+                                    <a href="#" class="text-primary"><i class="fab fa-instagram"></i></a>
+                                    <a href="#" class="text-primary"><i class="fab fa-twitter"></i></a>
+                                    <a href="#" class="text-primary"><i class="fab fa-youtube"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Map Section -->
+            <div class="card mb-5">
+                <div class="card-body">
+                    <h3 class="card-title mb-3">Lokasi Kami</h3>
+                    <div class="ratio ratio-16x9">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.288751323431!2d106.82512491476916!3d-6.226305395493602!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3f03298c33b%3A0x7b0811e5c492b3b9!2sJl.%20Gatot%20Subroto%2C%20Kota%20Jakarta%20Selatan%2C%20Daerah%20Khusus%20Ibukota%20Jakarta!5e0!3m2!1sen!2sid!4v1672651330969!5m2!1sen!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAQ Section -->
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">Pertanyaan yang Sering Diajukan</h3>
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                    Bagaimana cara menghubungi customer service?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Anda dapat menghubungi customer service kami melalui email di support@sportfield.com, telepon di +62 (021) 1234-5678, atau mengisi formulir kontak di halaman ini. Tim kami akan merespons dalam waktu 24 jam kerja.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                    Bagaimana jika saya mengalami masalah dengan booking?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Jika Anda mengalami masalah dengan booking, silakan hubungi customer service kami dengan menyertakan ID booking dan detail masalah yang Anda alami. Tim kami akan membantu menyelesaikan masalah Anda sesegera mungkin.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                    Bagaimana cara bergabung sebagai mitra lapangan?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Untuk bergabung sebagai mitra lapangan, silakan daftar sebagai "Pemilik Lapangan" pada menu pendaftaran atau hubungi tim partnership kami melalui email di partnership@sportfield.com. Tim kami akan menghubungi Anda untuk proses selanjutnya.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const contactForm = document.getElementById('contact-form');
+        
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // In a real application, this would be an AJAX request to send the data
+            // For now, we'll just show a success message
+            
+            // Clear form
+            contactForm.reset();
+            
+            // Show success message
+            const successAlert = document.createElement('div');
+            successAlert.className = 'alert alert-success mt-3';
+            successAlert.innerHTML = `
+                <h4 class="alert-heading">Pesan Terkirim!</h4>
+                <p>Terima kasih, ${name}! Pesan Anda telah kami terima. Tim kami akan menghubungi Anda melalui email ${email} sesegera mungkin.</p>
+            `;
+            
+            contactForm.parentNode.insertBefore(successAlert, contactForm.nextSibling);
+            
+            // Remove alert after 5 seconds
+            setTimeout(() => {
+                successAlert.remove();
+            }, 5000);
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

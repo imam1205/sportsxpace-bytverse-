@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Booking Saya</h1>
+    
+    <!-- Filter Options -->
+    <div class="mb-4">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-primary active" data-filter="all">Semua</button>
+            <button type="button" class="btn btn-outline-primary" data-filter="Pending">Pending</button>
+            <button type="button" class="btn btn-outline-primary" data-filter="Confirmed">Confirmed</button>
+            <button type="button" class="btn btn-outline-primary" data-filter="Completed">Completed</button>
+            <button type="button" class="btn btn-outline-primary" data-filter="Canceled">Canceled</button>
+        </div>
+    </div>
+    
+    <!-- Bookings List -->
+    {% if bookings %}
+        <div class="row booking-list">
+            {% for booking, lapangan, toko, payment in bookings %}
+                <div class="col-lg-6 mb-4 booking-item" data-status="{{ booking.status }}">
+                    <div class="card h-100">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="{{ lapangan.gambar_url }}" class="img-fluid rounded-start h-100" alt="{{ lapangan.nama_lapangan }}" style="object-fit: cover;">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <h5 class="card-title">{{ lapangan.nama_lapangan }}</h5>
+                                        <span class="status-badge status-{{ booking.status.lower() }}">
+                                            {{ booking.status }}
+                                        </span>
+                                    </div>
+                                    <p class="card-text mb-1">
+                                        <i class="fas fa-store me-1"></i> {{ toko.nama_toko }}
+                                    </p>
+                                    <p class="card-text mb-1">
+                                        <i class="fas fa-calendar me-1"></i> {{ booking.tanggal_booking.strftime('%d %B %Y') }}
+                                    </p>
+                                    <p class="card-text mb-1">
+                                        <i class="fas fa-clock me-1"></i> {{ booking.jam_booking_mulai.strftime('%H:%M') }} - {{ booking.jam_booking_selesai.strftime('%H:%M') }}
+                                    </p>
+                                    
+                                    <!-- Payment Status -->
+                                    {% if payment %}
+                                        <div class="d-flex align-items-center mb-1">
+                                            <i class="fas fa-money-bill-wave me-1"></i>
+                                            <span class="me-2">Pembayaran:</span>
+                                            <span class="badge bg-{{ 'success' if payment.status == 'Success' else 'warning' }}">
+                                                {{ payment.status }}
+                                            </span>
+                                        </div>
+                                        <p class="card-text mb-1">
+                                            <small class="text-muted">
+                                                {{ payment.metode }} - Rp {{ payment.jumlah|format_number }}
+                                            </small>
+                                        </p>
+                                    {% else %}
+                                        <p class="card-text mb-1">
+                                            <i class="fas fa-money-bill-wave me-1"></i> Pembayaran:
+                                            <span class="badge bg-danger">Belum Dibayar</span>
+                                        </p>
+                                    {% endif %}
+                                    
+                                    <div class="mt-3">
+                                        {% if booking.status == 'Completed' %}
+                                            <a href="{{ url_for('customer.rate_field', field_id=lapangan.id) }}" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-star me-1"></i> Beri Rating
+                                            </a>
+                                        {% elif booking.status == 'Pending' and not payment %}
+                                            <a href="{{ url_for('customer.payment', booking_id=booking.id) }}" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-credit-card me-1"></i> Bayar Sekarang
+                                            </a>
+                                        {% endif %}
+                                        <a href="{{ url_for('customer.field_detail', field_id=lapangan.id) }}" class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-eye me-1"></i> Lihat Lapangan
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <h4 class="alert-heading">Belum ada booking!</h4>
+            <p>Anda belum memiliki riwayat booking lapangan. Silakan cari dan booking lapangan sekarang.</p>
+            <hr>
+            <a href="{{ url_for('customer.fields') }}" class="btn btn-primary">
+                <i class="fas fa-search me-2"></i> Cari Lapangan
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Filter booking by status
+        const filterButtons = document.querySelectorAll('.btn-group button');
+        const bookingItems = document.querySelectorAll('.booking-item');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                
+                // Show/hide bookings based on filter
+                bookingItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-status') === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Check if there are any visible items
+                const visibleItems = document.querySelectorAll('.booking-item[style="display: block;"]');
+                const noResultsDiv = document.querySelector('.no-results');
+                
+                if (visibleItems.length === 0) {
+                    if (!noResultsDiv) {
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-info no-results';
+                        alertDiv.innerHTML = `
+                            <h4 class="alert-heading">Tidak ada hasil!</h4>
+                            <p>Tidak ada booking dengan status "${filter}".</p>
+                        `;
+                        document.querySelector('.booking-list').after(alertDiv);
+                    }
+                } else if (noResultsDiv) {
+                    noResultsDiv.remove();
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

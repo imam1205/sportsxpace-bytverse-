@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Kelola Pemesanan</h1>
+    
+    <!-- Filter Controls -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Filter Pemesanan</h5>
+                    <form action="{{ url_for('owner.bookings') }}" method="GET" class="row g-3">
+                        <div class="col-md-8">
+                            <select name="status" class="form-select">
+                                <option value="all" {% if current_filter == 'all' %}selected{% endif %}>Semua Status</option>
+                                <option value="Pending" {% if current_filter == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="Confirmed" {% if current_filter == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                                <option value="Completed" {% if current_filter == 'Completed' %}selected{% endif %}>Completed</option>
+                                <option value="Canceled" {% if current_filter == 'Canceled' %}selected{% endif %}>Canceled</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100">Filter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
+            <div class="d-flex flex-wrap gap-2">
+                <span class="status-badge status-pending me-2">Pending</span>
+                <span class="status-badge status-confirmed me-2">Confirmed</span>
+                <span class="status-badge status-completed me-2">Completed</span>
+                <span class="status-badge status-canceled">Canceled</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bookings Table -->
+    <div class="card">
+        <div class="card-body">
+            {% if bookings %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tanggal</th>
+                                <th>Waktu</th>
+                                <th>Lapangan</th>
+                                <th>Pembeli</th>
+                                <th>Pembayaran</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking, lapangan, user, payment in bookings %}
+                            <tr>
+                                <td>{{ booking.id }}</td>
+                                <td>{{ booking.tanggal_booking.strftime('%d/%m/%Y') }}</td>
+                                <td>{{ booking.jam_booking_mulai.strftime('%H:%M') }} - {{ booking.jam_booking_selesai.strftime('%H:%M') }}</td>
+                                <td>{{ lapangan.nama_lapangan }}</td>
+                                <td>{{ user.nama }}<br><small class="text-muted">{{ user.email }}</small></td>
+                                <td>
+                                    {% if payment %}
+                                        <span class="badge bg-{{ 'success' if payment.status == 'Success' else 'warning' }}">
+                                            {{ payment.status }}
+                                        </span>
+                                        <div>{{ payment.metode }}</div>
+                                        <div>Rp {{ payment.jumlah|format_number }}</div>
+                                    {% else %}
+                                        <span class="badge bg-danger">Belum Dibayar</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="status-badge status-{{ booking.status.lower() }}">
+                                        {{ booking.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if booking.status == 'Pending' %}
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                                Update Status
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <form action="{{ url_for('owner.update_booking_status', booking_id=booking.id) }}" method="POST">
+                                                        <input type="hidden" name="status" value="Confirmed">
+                                                        <button type="submit" class="dropdown-item text-primary">
+                                                            <i class="fas fa-check me-2"></i> Confirm
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                                <li>
+                                                    <form action="{{ url_for('owner.update_booking_status', booking_id=booking.id) }}" method="POST">
+                                                        <input type="hidden" name="status" value="Canceled">
+                                                        <button type="submit" class="dropdown-item text-danger">
+                                                            <i class="fas fa-times me-2"></i> Cancel
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    {% elif booking.status == 'Confirmed' %}
+                                        <form action="{{ url_for('owner.update_booking_status', booking_id=booking.id) }}" method="POST">
+                                            <input type="hidden" name="status" value="Completed">
+                                            <button type="submit" class="btn btn-sm btn-success">
+                                                <i class="fas fa-check-double me-2"></i> Complete
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <button class="btn btn-sm btn-outline-secondary" disabled>No Action</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    Tidak ada pemesanan yang sesuai dengan filter yang dipilih.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

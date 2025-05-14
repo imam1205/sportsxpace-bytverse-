@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-exclamation-triangle text-danger fa-5x"></i>
+                    </div>
+                    <h1 class="mb-4">Oops! Terjadi Kesalahan</h1>
+                    
+                    {% if message %}
+                        <p class="lead mb-4">{{ message }}</p>
+                    {% else %}
+                        <p class="lead mb-4">Maaf, terjadi kesalahan saat memproses permintaan Anda.</p>
+                    {% endif %}
+                    
+                    <p class="text-muted mb-4">Mohon coba kembali atau hubungi tim dukungan kami jika masalah berlanjut.</p>
+                    
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{{ url_for('main.index') }}" class="btn btn-primary">
+                            <i class="fas fa-home me-2"></i> Kembali ke Home
+                        </a>
+                        <a href="{{ url_for('main.contact') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-envelope me-2"></i> Hubungi Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

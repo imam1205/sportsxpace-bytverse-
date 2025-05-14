@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <!-- Field Details -->
+        <div class="col-lg-8">
+            <img src="{{ lapangan.gambar_url }}" alt="{{ lapangan.nama_lapangan }}" class="field-detail-image w-100">
+            
+            <div class="info-section mb-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h1 class="mb-1">{{ lapangan.nama_lapangan }}</h1>
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="star-rating me-2" data-rating="{{ lapangan.average_rating }}"></div>
+                            <span>({{ ratings|length }} ulasan)</span>
+                        </div>
+                        <div class="badge bg-primary mb-2">{{ lapangan.jenis_olahraga }}</div>
+                    </div>
+                    <div class="card-price">{{ lapangan.formatted_price }} / jam</div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p class="mb-2">
+                            <i class="fas fa-store me-2"></i> <strong>Toko:</strong> {{ toko.nama_toko }}
+                        </p>
+                        <p class="mb-2">
+                            <i class="fas fa-map-marker-alt me-2"></i> <strong>Lokasi:</strong> {{ toko.lokasi }}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2">
+                            <i class="fas fa-clock me-2"></i> <strong>Jam Operasional:</strong><br>
+                            {{ lapangan.jam_operasional_buka.strftime('%H:%M') }} - {{ lapangan.jam_operasional_tutup.strftime('%H:%M') }}
+                        </p>
+                    </div>
+                </div>
+                
+                {% if toko.deskripsi %}
+                <div>
+                    <h4>Tentang Lapangan:</h4>
+                    <p>{{ toko.deskripsi }}</p>
+                </div>
+                {% endif %}
+                
+                <div class="mt-4">
+                    {% if current_user.is_authenticated and current_user.role == 'Pembeli' %}
+                        <a href="{{ url_for('customer.book_field', field_id=lapangan.id) }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-calendar-check me-2"></i> Booking Sekarang
+                        </a>
+                    {% elif not current_user.is_authenticated %}
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i> Login untuk Booking
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Reviews Section -->
+            <div class="info-section">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3>Ulasan Pengguna</h3>
+                    {% if can_rate %}
+                        {% if user_rating %}
+                            <a href="{{ url_for('customer.rate_field', field_id=lapangan.id) }}" class="btn btn-outline-primary">
+                                <i class="fas fa-edit me-2"></i> Edit Ulasan Anda
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('customer.rate_field', field_id=lapangan.id) }}" class="btn btn-outline-primary">
+                                <i class="fas fa-star me-2"></i> Beri Ulasan
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                
+                {% if ratings %}
+                    <div class="rating-container">
+                        {% for rating, user in ratings %}
+                            <div class="review-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="review-user">{{ user.nama }}</div>
+                                    <div class="review-date">{{ rating.created_at.strftime('%d %b %Y') }}</div>
+                                </div>
+                                <div class="star-rating mb-2" data-rating="{{ rating.skor }}"></div>
+                                {% if rating.komentar %}
+                                    <p class="mb-0">{{ rating.komentar }}</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        Belum ada ulasan untuk lapangan ini.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Quick Booking Widget -->
+            <div class="calendar-container mb-4">
+                <h4>Jadwal Ketersediaan</h4>
+                <p class="text-muted">Pilih tanggal untuk melihat slot yang tersedia</p>
+                
+                <div class="mb-3">
+                    <label class="form-label">Tanggal</label>
+                    <input type="date" id="availability-date" class="form-control" min="{{ today }}">
+                </div>
+                
+                <div id="availability-slots" class="mt-3">
+                    <div class="text-center text-muted">
+                        <p>Silakan pilih tanggal untuk melihat ketersediaan</p>
+                    </div>
+                </div>
+                
+                <div class="d-grid mt-3">
+                    <a href="{{ url_for('customer.book_field', field_id=lapangan.id) }}" class="btn btn-primary">
+                        Lanjut ke Booking
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Field Info Card -->
+            <div class="info-section">
+                <h4>Informasi Lapangan</h4>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Jenis Olahraga
+                        <span class="badge bg-primary">{{ lapangan.jenis_olahraga }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Harga per Jam
+                        <span class="fw-bold">{{ lapangan.formatted_price }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Jam Operasional
+                        <span>{{ lapangan.jam_operasional_buka.strftime('%H:%M') }} - {{ lapangan.jam_operasional_tutup.strftime('%H:%M') }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Rating
+                        <div class="star-rating" data-rating="{{ lapangan.average_rating }}"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const availabilityDate = document.getElementById('availability-date');
+        const availabilitySlots = document.getElementById('availability-slots');
+        
+        // Set min date to today
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        availabilityDate.min = `${yyyy}-${mm}-${dd}`;
+        
+        // Check availability when date changes
+        availabilityDate.addEventListener('change', function() {
+            const selectedDate = this.value;
+            
+            if (!selectedDate) {
+                return;
+            }
+            
+            availabilitySlots.innerHTML = '<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+            
+            fetch(`/customer/field/{{ lapangan.id }}/check-availability?date=${selectedDate}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    renderAvailabilitySlots(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching availability:', error);
+                    availabilitySlots.innerHTML = '<div class="alert alert-danger">Gagal memuat ketersediaan jadwal. Silakan coba lagi.</div>';
+                });
+        });
+        
+        function renderAvailabilitySlots(data) {
+            availabilitySlots.innerHTML = '';
+            
+            if (!data.operating_hours) {
+                availabilitySlots.innerHTML = '<div class="alert alert-warning">Informasi jam operasional tidak tersedia.</div>';
+                return;
+            }
+            
+            const openHour = parseInt(data.operating_hours.open.split(':')[0]);
+            const closeHour = parseInt(data.operating_hours.close.split(':')[0]);
+            
+            // Convert booked slots to easily checkable format
+            const bookedSlots = data.booked_slots.map(slot => {
+                return {
+                    start: slot.start,
+                    end: slot.end
+                };
+            });
+            
+            // Create hourly slots
+            const slotsContainer = document.createElement('div');
+            slotsContainer.className = 'row g-2';
+            
+            for (let hour = openHour; hour < closeHour; hour++) {
+                const startTime = `${hour.toString().padStart(2, '0')}:00`;
+                const endTime = `${(hour + 1).toString().padStart(2, '0')}:00`;
+                
+                // Check if this slot is booked
+                const isBooked = bookedSlots.some(slot => {
+                    const slotStart = slot.start;
+                    const slotEnd = slot.end;
+                    
+                    // Check if this hour overlaps with a booking
+                    return (startTime >= slotStart && startTime < slotEnd) || 
+                           (endTime > slotStart && endTime <= slotEnd) ||
+                           (startTime <= slotStart && endTime >= slotEnd);
+                });
+                
+                // Create the time slot element
+                const slotCol = document.createElement('div');
+                slotCol.className = 'col-6';
+                
+                const slot = document.createElement('div');
+                slot.className = `time-slot ${isBooked ? 'booked' : 'available'} mb-2`;
+                slot.innerHTML = `${startTime} - ${endTime}`;
+                
+                slotCol.appendChild(slot);
+                slotsContainer.appendChild(slotCol);
+            }
+            
+            availabilitySlots.appendChild(slotsContainer);
+            
+            // Add helper message
+            const helperMessage = document.createElement('div');
+            helperMessage.className = 'mt-3 d-flex gap-3';
+            helperMessage.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <div class="time-slot available me-2" style="width: 15px; height: 15px;"></div>
+                    <small>Tersedia</small>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="time-slot booked me-2" style="width: 15px; height: 15px;"></div>
+                    <small>Terpesan</small>
+                </div>
+            `;
+            availabilitySlots.appendChild(helperMessage);
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}
