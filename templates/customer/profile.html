@@ -1,223 +1,307 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container my-5">
-    <div class="row">
-        <div class="col-lg-4 mb-4">
-            <!-- Profile Info Card -->
-            <div class="card mb-4">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <img src="https://ui-avatars.com/api/?name={{ current_user.nama }}&size=128&background=1e88e5&color=fff" alt="{{ current_user.nama }}" class="rounded-circle img-fluid" style="width: 120px;">
-                    </div>
-                    <h5 class="card-title">{{ current_user.nama }}</h5>
-                    <p class="card-text text-muted">{{ current_user.email }}</p>
-                    <p class="card-text">
-                        <span class="badge bg-primary">{{ current_user.role }}</span>
-                    </p>
-                    <p class="card-text text-muted">
-                        <small>Bergabung sejak {{ current_user.created_at.strftime('%d %B %Y') }}</small>
-                    </p>
-                </div>
-            </div>
-            
-            <!-- Quick Stats -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Statistik</h5>
-                    <div class="row text-center">
-                        <div class="col-4">
-                            <h4>{{ current_user.pemesanans|length }}</h4>
-                            <small class="text-muted">Bookings</small>
-                        </div>
-                        <div class="col-4">
-                            <h4>{{ current_user.ratings|length }}</h4>
-                            <small class="text-muted">Reviews</small>
-                        </div>
-                        <div class="col-4">
-                            <h4>{{ current_user.pemesanans|selectattr('status', 'equalto', 'Completed')|list|length }}</h4>
-                            <small class="text-muted">Selesai</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Quick Links -->
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Menu Cepat</h5>
-                    <div class="list-group list-group-flush">
-                        <a href="{{ url_for('customer.my_bookings') }}" class="list-group-item list-group-item-action">
-                            <i class="fas fa-calendar-check me-2"></i> Booking Saya
-                        </a>
-                        <a href="{{ url_for('customer.fields') }}" class="list-group-item list-group-item-action">
-                            <i class="fas fa-search me-2"></i> Cari Lapangan
-                        </a>
-                        <a href="{{ url_for('auth.logout') }}" class="list-group-item list-group-item-action text-danger">
-                            <i class="fas fa-sign-out-alt me-2"></i> Logout
-                        </a>
-                    </div>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-lg-4 mb-4">
+      <!-- Profile Info Card -->
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <div class="mb-3">
+            <img
+              src="https://ui-avatars.com/api/?name={{ current_user.nama }}&size=128&background=1e88e5&color=fff"
+              alt="{{ current_user.nama }}"
+              class="rounded-circle img-fluid"
+              style="width: 120px"
+            />
+          </div>
+          <h5 class="card-title">{{ current_user.nama }}</h5>
+          <p class="card-text text-muted">{{ current_user.email }}</p>
+          <p class="card-text">
+            <span class="badge bg-primary">{{ current_user.role }}</span>
+          </p>
+          <p class="card-text text-muted">
+            <small
+              >Bergabung sejak {{ current_user.created_at.strftime('%d %B %Y')
+              }}</small
+            >
+          </p>
         </div>
-        
-        <div class="col-lg-8">
-            <!-- My Profile -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="card-title">Profil Saya</h5>
-                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                            <i class="fas fa-edit me-1"></i> Edit Profil
-                        </button>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-3 fw-bold">Nama</div>
-                        <div class="col-md-9">{{ current_user.nama }}</div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-3 fw-bold">Email</div>
-                        <div class="col-md-9">{{ current_user.email }}</div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-3 fw-bold">Role</div>
-                        <div class="col-md-9">{{ current_user.role }}</div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-3 fw-bold">Tanggal Bergabung</div>
-                        <div class="col-md-9">{{ current_user.created_at.strftime('%d %B %Y') }}</div>
-                    </div>
-                </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Statistik</h5>
+          <div class="row text-center">
+            <div class="col-4">
+              <h4>{{ current_user.pemesanans|length }}</h4>
+              <small class="text-muted">Bookings</small>
             </div>
-            
-            <!-- Recent Bookings -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="card-title">Booking Terbaru</h5>
-                        <a href="{{ url_for('customer.my_bookings') }}" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
-                    </div>
-                    
-                    {% set recent_bookings = current_user.pemesanans|sort(attribute='created_at', reverse=True)|list|slice(0, 3) %}
-                    
-                    {% if recent_bookings %}
-                        <div class="list-group list-group-flush">
-                            {% for booking in recent_bookings %}
-                                {% set lapangan = booking.lapangan %}
-                                <div class="list-group-item">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <h6 class="mb-1">{{ lapangan.nama_lapangan }}</h6>
-                                            <p class="mb-1 text-muted">
-                                                <small>
-                                                    <i class="fas fa-calendar me-1"></i> {{ booking.tanggal_booking.strftime('%d %B %Y') }} &bull; 
-                                                    <i class="fas fa-clock me-1"></i> {{ booking.jam_booking_mulai.strftime('%H:%M') }} - {{ booking.jam_booking_selesai.strftime('%H:%M') }}
-                                                </small>
-                                            </p>
-                                        </div>
-                                        <span class="status-badge status-{{ booking.status.lower() }}">
-                                            {{ booking.status }}
-                                        </span>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="alert alert-info">
-                            Anda belum memiliki booking. <a href="{{ url_for('customer.fields') }}" class="alert-link">Cari lapangan sekarang</a>.
-                        </div>
-                    {% endif %}
-                </div>
+            <div class="col-4">
+              <h4>{{ current_user.ratings|length }}</h4>
+              <small class="text-muted">Reviews</small>
             </div>
-            
-            <!-- Recent Reviews -->
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="card-title">Ulasan Terbaru</h5>
-                    </div>
-                    
-                    {% set recent_ratings = current_user.ratings|sort(attribute='created_at', reverse=True)|list|slice(0, 3) %}
-                    
-                    {% if recent_ratings %}
-                        <div class="list-group list-group-flush">
-                            {% for rating in recent_ratings %}
-                                {% set lapangan = rating.lapangan %}
-                                <div class="list-group-item">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <h6 class="mb-1">{{ lapangan.nama_lapangan }}</h6>
-                                            <div class="star-rating mb-2" data-rating="{{ rating.skor }}"></div>
-                                            {% if rating.komentar %}
-                                                <p class="mb-0">{{ rating.komentar }}</p>
-                                            {% endif %}
-                                        </div>
-                                        <small class="text-muted">{{ rating.created_at.strftime('%d %b %Y') }}</small>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="alert alert-info">
-                            Anda belum memberikan ulasan. Setelah menyelesaikan booking, Anda dapat memberikan ulasan untuk lapangan yang digunakan.
-                        </div>
-                    {% endif %}
-                </div>
+            <div class="col-4">
+              <h4>
+                {{ current_user.pemesanans|selectattr('status', 'equalto',
+                'Completed')|list|length }}
+              </h4>
+              <small class="text-muted">Selesai</small>
             </div>
+          </div>
         </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Menu Cepat</h5>
+          <div class="list-group list-group-flush">
+            <a
+              href="{{ url_for('customer.my_bookings') }}"
+              class="list-group-item list-group-item-action"
+            >
+              <i class="fas fa-calendar-check me-2"></i> Booking Saya
+            </a>
+            <a
+              href="{{ url_for('customer.fields') }}"
+              class="list-group-item list-group-item-action"
+            >
+              <i class="fas fa-search me-2"></i> Cari Lapangan
+            </a>
+            <a
+              href="{{ url_for('auth.logout') }}"
+              class="list-group-item list-group-item-action text-danger"
+            >
+              <i class="fas fa-sign-out-alt me-2"></i> Logout
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <div class="col-lg-8">
+      <!-- My Profile -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title">Profil Saya</h5>
+            <button
+              class="btn btn-sm btn-outline-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#editProfileModal"
+            >
+              <i class="fas fa-edit me-1"></i> Edit Profil
+            </button>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-3 fw-bold">Nama</div>
+            <div class="col-md-9">{{ current_user.nama }}</div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-3 fw-bold">Email</div>
+            <div class="col-md-9">{{ current_user.email }}</div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-3 fw-bold">Role</div>
+            <div class="col-md-9">{{ current_user.role }}</div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-3 fw-bold">Tanggal Bergabung</div>
+            <div class="col-md-9">
+              {{ current_user.created_at.strftime('%d %B %Y') }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Bookings -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title">Booking Terbaru</h5>
+            <a
+              href="{{ url_for('customer.my_bookings') }}"
+              class="btn btn-sm btn-outline-primary"
+              >Lihat Semua</a
+            >
+          </div>
+
+          {% set recent_bookings =
+          current_user.pemesanans|sort(attribute='created_at',
+          reverse=True)|list|slice(0, 3) %} {% if recent_bookings %}
+          <div class="list-group list-group-flush">
+            {% for booking in recent_bookings %} {% set lapangan =
+            booking.lapangan %}
+            <div class="list-group-item">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="mb-1">{{ lapangan.nama_lapangan }}</h6>
+                  <p class="mb-1 text-muted">
+                    <small>
+                      <i class="fas fa-calendar me-1"></i> {{
+                      booking.tanggal_booking.strftime('%d %B %Y') }} &bull;
+                      <i class="fas fa-clock me-1"></i> {{
+                      booking.jam_booking_mulai.strftime('%H:%M') }} - {{
+                      booking.jam_booking_selesai.strftime('%H:%M') }}
+                    </small>
+                  </p>
+                </div>
+                <span class="status-badge status-{{ booking.status.lower() }}">
+                  {{ booking.status }}
+                </span>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="alert alert-info">
+            Anda belum memiliki booking.
+            <a href="{{ url_for('customer.fields') }}" class="alert-link"
+              >Cari lapangan sekarang</a
+            >.
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Recent Reviews -->
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title">Ulasan Terbaru</h5>
+          </div>
+
+          {% set recent_ratings =
+          current_user.ratings|sort(attribute='created_at',
+          reverse=True)|list|slice(0, 3) %} {% if recent_ratings %}
+          <div class="list-group list-group-flush">
+            {% for rating in recent_ratings %} {% set lapangan = rating.lapangan
+            %}
+            <div class="list-group-item">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="mb-1">{{ lapangan.nama_lapangan }}</h6>
+                  <div
+                    class="star-rating mb-2"
+                    data-rating="{{ rating.skor }}"
+                  ></div>
+                  {% if rating.komentar %}
+                  <p class="mb-0">{{ rating.komentar }}</p>
+                  {% endif %}
+                </div>
+                <small class="text-muted"
+                  >{{ rating.created_at.strftime('%d %b %Y') }}</small
+                >
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="alert alert-info">
+            Anda belum memberikan ulasan. Setelah menyelesaikan booking, Anda
+            dapat memberikan ulasan untuk lapangan yang digunakan.
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Edit Profile Modal -->
 <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit Profil</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Profil</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ url_for('customer.profile') }}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+          <div class="mb-3">
+            <label for="nama" class="form-label">Nama</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nama"
+              name="nama"
+              value="{{ current_user.nama }}"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              value="{{ current_user.email }}"
+              required
+            />
+          </div>
+
+          <hr />
+
+          <div class="mb-3">
+            <label for="current_password" class="form-label"
+              >Password Saat Ini</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              id="current_password"
+              name="current_password"
+            />
+            <div class="form-text">
+              Masukkan password saat ini untuk mengubah informasi profil.
             </div>
-            <div class="modal-body">
-                <form action="{{ url_for('customer.profile') }}" method="POST">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    
-                    <div class="mb-3">
-                        <label for="nama" class="form-label">Nama</label>
-                        <input type="text" class="form-control" id="nama" name="nama" value="{{ current_user.nama }}" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" required>
-                    </div>
-                    
-                    <hr>
-                    
-                    <div class="mb-3">
-                        <label for="current_password" class="form-label">Password Saat Ini</label>
-                        <input type="password" class="form-control" id="current_password" name="current_password">
-                        <div class="form-text">Masukkan password saat ini untuk mengubah informasi profil.</div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="new_password" class="form-label">Password Baru (opsional)</label>
-                        <input type="password" class="form-control" id="new_password" name="new_password">
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="confirm_password" class="form-label">Konfirmasi Password Baru</label>
-                        <input type="password" class="form-control" id="confirm_password" name="confirm_password">
-                    </div>
-                    
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="new_password" class="form-label"
+              >Password Baru (opsional)</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              id="new_password"
+              name="new_password"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="confirm_password" class="form-label"
+              >Konfirmasi Password Baru</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              id="confirm_password"
+              name="confirm_password"
+            />
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">
+              Simpan Perubahan
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}

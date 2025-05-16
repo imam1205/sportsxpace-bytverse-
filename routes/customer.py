@@ -98,17 +98,19 @@ def field_detail(field_id):
             lapangan_id=field_id
         ).first()
     
-    return render_template('customer/field_detail.html',
-                           title=lapangan.nama_lapangan,
-                           lapangan=lapangan,
-                           toko=toko,
-                           ratings=ratings,
-                           can_rate=can_rate,
-                           user_rating=user_rating)
+    return render_template('customer/field_detail.html', 
+        title=lapangan.nama_lapangan, 
+        lapangan=lapangan, 
+        toko=toko, 
+        ratings=ratings, 
+        can_rate=can_rate, 
+        user_rating=user_rating
+    )
 
 @customer_bp.route('/field/<int:field_id>/check-availability', methods=['GET'])
 def check_availability(field_id):
     date_str = request.args.get('date')
+    print(field_id)
     
     try:
         selected_date = datetime.strptime(date_str, '%Y-%m-%d').date()

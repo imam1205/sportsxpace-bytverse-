@@ -1,263 +1,386 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container my-5">
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="form-container">
-                <h2 class="mb-4">Pembayaran</h2>
-                
-                <!-- Booking Details -->
-                <div class="mb-4">
-                    <h5>Detail Booking</h5>
-                    <div class="card mb-3">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="{{ lapangan.gambar_url }}" alt="{{ lapangan.nama_lapangan }}" class="img-fluid rounded-start" style="height: 100%; object-fit: cover;">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ lapangan.nama_lapangan }}</h5>
-                                    <p class="card-text">
-                                        <span class="badge bg-primary">{{ lapangan.jenis_olahraga }}</span>
-                                    </p>
-                                    <p class="card-text mb-1">
-                                        <i class="fas fa-calendar me-1"></i> <strong>Tanggal:</strong> {{ booking.tanggal_booking.strftime('%d %B %Y') }}
-                                    </p>
-                                    <p class="card-text mb-1">
-                                        <i class="fas fa-clock me-1"></i> <strong>Waktu:</strong> {{ booking.jam_booking_mulai.strftime('%H:%M') }} - {{ booking.jam_booking_selesai.strftime('%H:%M') }}
-                                    </p>
-                                    <p class="card-text mb-1">
-                                        <i class="fas fa-hourglass-half me-1"></i> <strong>Durasi:</strong> {{ duration_hours }} jam
-                                    </p>
-                                    <p class="card-price fw-bold mt-2">Total: Rp {{ total_amount|format_number }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="form-container">
+        <h2 class="mb-4">Pembayaran</h2>
+
+        <!-- Booking Details -->
+        <div class="mb-4">
+          <h5>Detail Booking</h5>
+          <div class="card mb-3">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img
+                  src="{{ lapangan.gambar_url }}"
+                  alt="{{ lapangan.nama_lapangan }}"
+                  class="img-fluid rounded-start"
+                  style="height: 100%; object-fit: cover"
+                />
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">{{ lapangan.nama_lapangan }}</h5>
+                  <p class="card-text">
+                    <span class="badge bg-primary"
+                      >{{ lapangan.jenis_olahraga }}</span
+                    >
+                  </p>
+                  <p class="card-text mb-1">
+                    <i class="fas fa-calendar me-1"></i>
+                    <strong>Tanggal:</strong> {{
+                    booking.tanggal_booking.strftime('%d %B %Y') }}
+                  </p>
+                  <p class="card-text mb-1">
+                    <i class="fas fa-clock me-1"></i> <strong>Waktu:</strong> {{
+                    booking.jam_booking_mulai.strftime('%H:%M') }} - {{
+                    booking.jam_booking_selesai.strftime('%H:%M') }}
+                  </p>
+                  <p class="card-text mb-1">
+                    <i class="fas fa-hourglass-half me-1"></i>
+                    <strong>Durasi:</strong> {{ duration_hours }} jam
+                  </p>
+                  <p class="card-price fw-bold mt-2">
+                    Total: Rp {{ total_amount|format_number }}
+                  </p>
                 </div>
-                
-                <!-- Payment Methods -->
-                <form method="POST" action="" id="payment-form">
-                    {{ form.hidden_tag() }}
-                    
-                    <div class="mb-4">
-                        <h5>Pilih Metode Pembayaran</h5>
-                        <div class="row g-3">
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100">
-                                    <div class="form-check p-3 h-100 d-flex flex-column align-items-center">
-                                        <input class="form-check-input" type="radio" name="metode" id="method_bank" value="Transfer Bank" checked>
-                                        <label class="form-check-label text-center d-block w-100" for="method_bank">
-                                            <div class="payment-method-icon mb-2">
-                                                <i class="fas fa-university"></i>
-                                            </div>
-                                            <h6>Transfer Bank</h6>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100">
-                                    <div class="form-check p-3 h-100 d-flex flex-column align-items-center">
-                                        <input class="form-check-input" type="radio" name="metode" id="method_ewallet" value="E-Wallet">
-                                        <label class="form-check-label text-center d-block w-100" for="method_ewallet">
-                                            <div class="payment-method-icon mb-2">
-                                                <i class="fas fa-wallet"></i>
-                                            </div>
-                                            <h6>E-Wallet</h6>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100">
-                                    <div class="form-check p-3 h-100 d-flex flex-column align-items-center">
-                                        <input class="form-check-input" type="radio" name="metode" id="method_credit" value="Kartu Kredit">
-                                        <label class="form-check-label text-center d-block w-100" for="method_credit">
-                                            <div class="payment-method-icon mb-2">
-                                                <i class="fas fa-credit-card"></i>
-                                            </div>
-                                            <h6>Kartu Kredit</h6>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card h-100">
-                                    <div class="form-check p-3 h-100 d-flex flex-column align-items-center">
-                                        <input class="form-check-input" type="radio" name="metode" id="method_cash" value="Tunai">
-                                        <label class="form-check-label text-center d-block w-100" for="method_cash">
-                                            <div class="payment-method-icon mb-2">
-                                                <i class="fas fa-money-bill-wave"></i>
-                                            </div>
-                                            <h6>Tunai</h6>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Payment Method Details -->
-                    <div class="mb-4">
-                        <!-- Transfer Bank Details -->
-                        <div class="payment-method-details" data-method="Transfer Bank">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">Transfer Bank</h6>
-                                    <p class="mb-2">Silakan transfer ke rekening berikut:</p>
-                                    <div class="mb-3">
-                                        <p class="mb-1"><strong>Bank:</strong> Bank Central Asia (BCA)</p>
-                                        <p class="mb-1"><strong>No. Rekening:</strong> 1234567890</p>
-                                        <p class="mb-1"><strong>Atas Nama:</strong> PT SportField Indonesia</p>
-                                        <p class="mb-0"><strong>Jumlah:</strong> Rp {{ total_amount|format_number }}</p>
-                                    </div>
-                                    <div class="alert alert-info">
-                                        <i class="fas fa-info-circle me-2"></i> Pembayaran akan dikonfirmasi dalam 15 menit setelah transfer berhasil.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- E-Wallet Details -->
-                        <div class="payment-method-details d-none" data-method="E-Wallet">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">E-Wallet</h6>
-                                    <p class="mb-3">Pilih E-Wallet yang ingin digunakan:</p>
-                                    <div class="mb-3">
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" name="ewallet_type" id="ewallet_gopay" value="GoPay" checked>
-                                            <label class="form-check-label" for="ewallet_gopay">
-                                                GoPay
-                                            </label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" name="ewallet_type" id="ewallet_ovo" value="OVO">
-                                            <label class="form-check-label" for="ewallet_ovo">
-                                                OVO
-                                            </label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" name="ewallet_type" id="ewallet_dana" value="DANA">
-                                            <label class="form-check-label" for="ewallet_dana">
-                                                DANA
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="alert alert-info">
-                                        <i class="fas fa-info-circle me-2"></i> Anda akan diarahkan ke halaman pembayaran setelah mengklik tombol "Bayar Sekarang".
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Credit Card Details -->
-                        <div class="payment-method-details d-none" data-method="Kartu Kredit">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">Kartu Kredit</h6>
-                                    <div class="mb-3">
-                                        <label class="form-label">Nomor Kartu</label>
-                                        <input type="text" class="form-control" placeholder="1234 5678 9012 3456">
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label">Tanggal Kadaluarsa</label>
-                                            <input type="text" class="form-control" placeholder="MM/YY">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">CVV</label>
-                                            <input type="text" class="form-control" placeholder="123">
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Nama Pemegang Kartu</label>
-                                        <input type="text" class="form-control" placeholder="Nama Lengkap">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Cash Details -->
-                        <div class="payment-method-details d-none" data-method="Tunai">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">Pembayaran Tunai</h6>
-                                    <p>Pembayaran tunai dilakukan di lokasi lapangan sebelum waktu bermain.</p>
-                                    <div class="alert alert-warning">
-                                        <i class="fas fa-exclamation-triangle me-2"></i> Harap datang 15 menit lebih awal untuk melakukan pembayaran.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="d-grid">
-                        {{ form.submit(class="btn btn-primary btn-lg", id="payment-button") }}
-                    </div>
-                </form>
+              </div>
             </div>
+          </div>
         </div>
-        
-        <div class="col-lg-4">
-            <!-- Payment Summary -->
-            <div class="info-section mb-4">
-                <h4>Ringkasan Pembayaran</h4>
-                <div class="mb-3">
-                    <table class="table">
-                        <tbody>
-                            <tr>
-                                <td>Harga Lapangan</td>
-                                <td class="text-end">Rp {{ lapangan.harga|format_number }} x {{ duration_hours }} jam</td>
-                            </tr>
-                            <tr>
-                                <td>Subtotal</td>
-                                <td class="text-end">Rp {{ total_amount|format_number }}</td>
-                            </tr>
-                            <tr>
-                                <td>Biaya Layanan</td>
-                                <td class="text-end">Rp 0</td>
-                            </tr>
-                            <tr class="fw-bold">
-                                <td>Total Pembayaran</td>
-                                <td class="text-end">Rp {{ total_amount|format_number }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+        <!-- Payment Methods -->
+        <form method="POST" action="" id="payment-form">
+          {{ form.hidden_tag() }}
+
+          <div class="mb-4">
+            <h5>Pilih Metode Pembayaran</h5>
+            <div class="row g-3">
+              <div class="col-md-6 col-lg-3">
+                <div class="card h-100">
+                  <div
+                    class="form-check p-3 h-100 d-flex flex-column align-items-center"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="metode"
+                      id="method_bank"
+                      value="Transfer Bank"
+                      checked
+                    />
+                    <label
+                      class="form-check-label text-center d-block w-100"
+                      for="method_bank"
+                    >
+                      <div class="payment-method-icon mb-2">
+                        <i class="fas fa-university"></i>
+                      </div>
+                      <h6>Transfer Bank</h6>
+                    </label>
+                  </div>
                 </div>
-                
-                <!-- Timer for demonstration purposes -->
-                <div class="alert alert-warning">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <i class="fas fa-clock me-2"></i> Selesaikan pembayaran dalam:
-                        </div>
-                        <div class="fw-bold" id="payment-countdown">15:00</div>
+              </div>
+              <div class="col-md-6 col-lg-3">
+                <div class="card h-100">
+                  <div
+                    class="form-check p-3 h-100 d-flex flex-column align-items-center"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="metode"
+                      id="method_ewallet"
+                      value="E-Wallet"
+                    />
+                    <label
+                      class="form-check-label text-center d-block w-100"
+                      for="method_ewallet"
+                    >
+                      <div class="payment-method-icon mb-2">
+                        <i class="fas fa-wallet"></i>
+                      </div>
+                      <h6>E-Wallet</h6>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3">
+                <div class="card h-100">
+                  <div
+                    class="form-check p-3 h-100 d-flex flex-column align-items-center"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="metode"
+                      id="method_credit"
+                      value="Kartu Kredit"
+                    />
+                    <label
+                      class="form-check-label text-center d-block w-100"
+                      for="method_credit"
+                    >
+                      <div class="payment-method-icon mb-2">
+                        <i class="fas fa-credit-card"></i>
+                      </div>
+                      <h6>Kartu Kredit</h6>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3">
+                <div class="card h-100">
+                  <div
+                    class="form-check p-3 h-100 d-flex flex-column align-items-center"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="metode"
+                      id="method_cash"
+                      value="Tunai"
+                    />
+                    <label
+                      class="form-check-label text-center d-block w-100"
+                      for="method_cash"
+                    >
+                      <div class="payment-method-icon mb-2">
+                        <i class="fas fa-money-bill-wave"></i>
+                      </div>
+                      <h6>Tunai</h6>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Method Details -->
+          <div class="mb-4">
+            <!-- Transfer Bank Details -->
+            <div class="payment-method-details" data-method="Transfer Bank">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title">Transfer Bank</h6>
+                  <p class="mb-2">Silakan transfer ke rekening berikut:</p>
+                  <div class="mb-3">
+                    <p class="mb-1">
+                      <strong>Bank:</strong> Bank Central Asia (BCA)
+                    </p>
+                    <p class="mb-1">
+                      <strong>No. Rekening:</strong> 1234567890
+                    </p>
+                    <p class="mb-1">
+                      <strong>Atas Nama:</strong> PT sportXpace Indonesia
+                    </p>
+                    <p class="mb-0">
+                      <strong>Jumlah:</strong> Rp {{ total_amount|format_number
+                      }}
+                    </p>
+                  </div>
+                  <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> Pembayaran akan
+                    dikonfirmasi dalam 15 menit setelah transfer berhasil.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- E-Wallet Details -->
+            <div class="payment-method-details d-none" data-method="E-Wallet">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title">E-Wallet</h6>
+                  <p class="mb-3">Pilih E-Wallet yang ingin digunakan:</p>
+                  <div class="mb-3">
+                    <div class="form-check mb-2">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="ewallet_type"
+                        id="ewallet_gopay"
+                        value="GoPay"
+                        checked
+                      />
+                      <label class="form-check-label" for="ewallet_gopay">
+                        GoPay
+                      </label>
                     </div>
+                    <div class="form-check mb-2">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="ewallet_type"
+                        id="ewallet_ovo"
+                        value="OVO"
+                      />
+                      <label class="form-check-label" for="ewallet_ovo">
+                        OVO
+                      </label>
+                    </div>
+                    <div class="form-check mb-2">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="ewallet_type"
+                        id="ewallet_dana"
+                        value="DANA"
+                      />
+                      <label class="form-check-label" for="ewallet_dana">
+                        DANA
+                      </label>
+                    </div>
+                  </div>
+                  <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> Anda akan diarahkan
+                    ke halaman pembayaran setelah mengklik tombol "Bayar
+                    Sekarang".
+                  </div>
                 </div>
-                
-                <div class="alert alert-danger d-none" id="payment-expired-alert">
-                    <i class="fas fa-exclamation-circle me-2"></i> Waktu pembayaran habis. Silakan ulangi proses booking.
+              </div>
+            </div>
+
+            <!-- Credit Card Details -->
+            <div
+              class="payment-method-details d-none"
+              data-method="Kartu Kredit"
+            >
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title">Kartu Kredit</h6>
+                  <div class="mb-3">
+                    <label class="form-label">Nomor Kartu</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="1234 5678 9012 3456"
+                    />
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label class="form-label">Tanggal Kadaluarsa</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="MM/YY"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">CVV</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="123"
+                      />
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Nama Pemegang Kartu</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Nama Lengkap"
+                    />
+                  </div>
                 </div>
+              </div>
             </div>
-            
-            <!-- Payment Instructions -->
-            <div class="info-section">
-                <h4>Informasi Penting</h4>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Booking akan dikonfirmasi setelah pembayaran berhasil</li>
-                    <li class="list-group-item">Semua pembayaran non-tunai tidak dapat dikembalikan</li>
-                    <li class="list-group-item">Pembatalan booking harus dilakukan minimal 24 jam sebelum jadwal</li>
-                    <li class="list-group-item">Untuk bantuan, hubungi customer service di nomor 08123456789</li>
-                </ul>
+
+            <!-- Cash Details -->
+            <div class="payment-method-details d-none" data-method="Tunai">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title">Pembayaran Tunai</h6>
+                  <p>
+                    Pembayaran tunai dilakukan di lokasi lapangan sebelum waktu
+                    bermain.
+                  </p>
+                  <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Harap
+                    datang 15 menit lebih awal untuk melakukan pembayaran.
+                  </div>
+                </div>
+              </div>
             </div>
-        </div>
+          </div>
+
+          <div class="d-grid">
+            {{ form.submit(class="btn btn-primary btn-lg", id="payment-button")
+            }}
+          </div>
+        </form>
+      </div>
     </div>
+
+    <div class="col-lg-4">
+      <!-- Payment Summary -->
+      <div class="info-section mb-4">
+        <h4>Ringkasan Pembayaran</h4>
+        <div class="mb-3">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td>Harga Lapangan</td>
+                <td class="text-end">
+                  Rp {{ lapangan.harga|format_number }} x {{ duration_hours }}
+                  jam
+                </td>
+              </tr>
+              <tr>
+                <td>Subtotal</td>
+                <td class="text-end">Rp {{ total_amount|format_number }}</td>
+              </tr>
+              <tr>
+                <td>Biaya Layanan</td>
+                <td class="text-end">Rp 0</td>
+              </tr>
+              <tr class="fw-bold">
+                <td>Total Pembayaran</td>
+                <td class="text-end">Rp {{ total_amount|format_number }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Timer for demonstration purposes -->
+        <div class="alert alert-warning">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <i class="fas fa-clock me-2"></i> Selesaikan pembayaran dalam:
+            </div>
+            <div class="fw-bold" id="payment-countdown">15:00</div>
+          </div>
+        </div>
+
+        <div class="alert alert-danger d-none" id="payment-expired-alert">
+          <i class="fas fa-exclamation-circle me-2"></i> Waktu pembayaran habis.
+          Silakan ulangi proses booking.
+        </div>
+      </div>
+
+      <!-- Payment Instructions -->
+      <div class="info-section">
+        <h4>Informasi Penting</h4>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            Booking akan dikonfirmasi setelah pembayaran berhasil
+          </li>
+          <li class="list-group-item">
+            Semua pembayaran non-tunai tidak dapat dikembalikan
+          </li>
+          <li class="list-group-item">
+            Pembatalan booking harus dilakukan minimal 24 jam sebelum jadwal
+          </li>
+          <li class="list-group-item">
+            Untuk bantuan, hubungi customer service di nomor 08123456789
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/payment.js') }}"></script>
-{% endblock %}
-{% endblock %}
+{% endblock %} {% endblock %}

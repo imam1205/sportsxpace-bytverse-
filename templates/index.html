@@ -1,254 +1,386 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <!-- Hero Section -->
 <section class="hero">
-    <div class="container text-center">
-        <h1>Temukan Lapangan Olahraga Terbaik</h1>
-        <p>Booking lapangan futsal, basket, badminton, dan lainnya dengan mudah dan cepat. Cari lapangan terdekat sekarang!</p>
-        <a href="{{ url_for('customer.fields') }}" class="btn btn-primary btn-lg">Cari Lapangan</a>
-        {% if not current_user.is_authenticated %}
-            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light btn-lg ms-2">Daftar Sekarang</a>
-        {% endif %}
-    </div>
+  <div class="container text-center">
+    <h1>Temukan Lapangan Olahraga Terbaik</h1>
+    <p>
+      Booking lapangan futsal, basket, badminton, dan lainnya dengan mudah dan
+      cepat. Cari lapangan terdekat sekarang!
+    </p>
+    <a href="{{ url_for('customer.fields') }}" class="btn btn-primary btn-lg"
+      >Cari Lapangan</a
+    >
+    {% if not current_user.is_authenticated %}
+    <a
+      href="{{ url_for('auth.register') }}"
+      class="btn btn-outline-light btn-lg ms-2"
+      >Daftar Sekarang</a
+    >
+    {% endif %}
+  </div>
 </section>
 
 <!-- Features Section -->
 <section class="container my-5">
-    <div class="text-center mb-5">
-        <h2 class="fw-bold">Kenapa Memilih SportField?</h2>
-        <p class="text-muted">Platform booking lapangan olahraga terbaik di Indonesia</p>
+  <div class="text-center mb-5">
+    <h2 class="fw-bold">Kenapa Memilih sportXpace?</h2>
+    <p class="text-muted">
+      Platform booking lapangan olahraga terbaik di Indonesia
+    </p>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card h-100 border-0 text-center">
+        <div class="card-body">
+          <div class="mb-4">
+            <i class="fas fa-search fa-3x text-primary"></i>
+          </div>
+          <h4 class="card-title">Mudah Ditemukan</h4>
+          <p class="card-text">
+            Temukan lapangan olahraga terdekat dengan fitur pencarian yang
+            lengkap berdasarkan lokasi, jenis olahraga, dan harga.
+          </p>
+        </div>
+      </div>
     </div>
-    
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card h-100 border-0 text-center">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <i class="fas fa-search fa-3x text-primary"></i>
-                    </div>
-                    <h4 class="card-title">Mudah Ditemukan</h4>
-                    <p class="card-text">Temukan lapangan olahraga terdekat dengan fitur pencarian yang lengkap berdasarkan lokasi, jenis olahraga, dan harga.</p>
-                </div>
-            </div>
+    <div class="col-md-4">
+      <div class="card h-100 border-0 text-center">
+        <div class="card-body">
+          <div class="mb-4">
+            <i class="fas fa-calendar-check fa-3x text-primary"></i>
+          </div>
+          <h4 class="card-title">Booking Instan</h4>
+          <p class="card-text">
+            Proses booking yang mudah dan cepat. Pilih tanggal dan jam, lakukan
+            pembayaran, dan dapatkan konfirmasi instan.
+          </p>
         </div>
-        <div class="col-md-4">
-            <div class="card h-100 border-0 text-center">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <i class="fas fa-calendar-check fa-3x text-primary"></i>
-                    </div>
-                    <h4 class="card-title">Booking Instan</h4>
-                    <p class="card-text">Proses booking yang mudah dan cepat. Pilih tanggal dan jam, lakukan pembayaran, dan dapatkan konfirmasi instan.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card h-100 border-0 text-center">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <i class="fas fa-credit-card fa-3x text-primary"></i>
-                    </div>
-                    <h4 class="card-title">Pembayaran Aman</h4>
-                    <p class="card-text">Berbagai metode pembayaran yang aman dan terpercaya. Bayar dengan mudah melalui transfer bank, e-wallet, atau kartu kredit.</p>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="col-md-4">
+      <div class="card h-100 border-0 text-center">
+        <div class="card-body">
+          <div class="mb-4">
+            <i class="fas fa-credit-card fa-3x text-primary"></i>
+          </div>
+          <h4 class="card-title">Pembayaran Aman</h4>
+          <p class="card-text">
+            Berbagai metode pembayaran yang aman dan terpercaya. Bayar dengan
+            mudah melalui transfer bank, e-wallet, atau kartu kredit.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- Popular Sports Section -->
 <section class="bg-light py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">Jenis Olahraga Populer</h2>
-            <p class="text-muted">Berbagai jenis lapangan olahraga tersedia untuk kebutuhan Anda</p>
-        </div>
-        
-        <div class="row g-4">
-            <div class="col-md-4 col-sm-6">
-                <div class="card h-100">
-                    <img src="https://pixabay.com/get/g46a448afc50ef22dff5c2431e1e25c4237ccb0ee5348a44980e11d1aaf93891b411aebcb41cf0f5db27119864f35a8468626c0ed77849b8cc7579a783af218b8_1280.jpg" class="card-img-top" alt="Futsal">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Futsal</h5>
-                        <a href="{{ url_for('customer.fields') }}?sport_type=Futsal" class="btn btn-outline-primary">Lihat Lapangan</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <div class="card h-100">
-                    <img src="https://pixabay.com/get/ga829d74544027e300f0406adb4ea64aa2a6ca9429d7667d1f9080ecb87509ae43963c47b7851231d0e8cbde541fcaea5307d367b6ac4f53ac8061cfac39f00d8_1280.jpg" class="card-img-top" alt="Basket">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Basket</h5>
-                        <a href="{{ url_for('customer.fields') }}?sport_type=Basket" class="btn btn-outline-primary">Lihat Lapangan</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <div class="card h-100">
-                    <img src="https://pixabay.com/get/g5cf1b58c229307cb7590b11f908553e0cac95a1ffaf865830adccdf7a48f3b53d4139d33bad07ca2debb388439e10ba69ce576515218090d706425ac1d5bf790_1280.jpg" class="card-img-top" alt="Badminton">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Badminton</h5>
-                        <a href="{{ url_for('customer.fields') }}?sport_type=Badminton" class="btn btn-outline-primary">Lihat Lapangan</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <div class="card h-100">
-                    <img src="https://pixabay.com/get/gc98a1b1d9038dd3213281ef5f64fe2e29d554f08564204aeb4d6fa0cd8ef754ea64fa5da5bbddbf30592ad72a9b0e877a3ec1255fe921c434a0bb691c1bf230c_1280.jpg" class="card-img-top" alt="Tenis">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Tenis</h5>
-                        <a href="{{ url_for('customer.fields') }}?sport_type=Tenis" class="btn btn-outline-primary">Lihat Lapangan</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <div class="card h-100">
-                    <img src="https://pixabay.com/get/g5df06333d3c85fc11d9f35090a36034f812ee6dcf19e4d2dc92c8535993bf2e606ef8ae551ff7b26b762131382bf990e4d97d1f2d5215ac9630f9164fbf8d74d_1280.jpg" class="card-img-top" alt="Voli">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Voli</h5>
-                        <a href="{{ url_for('customer.fields') }}?sport_type=Voli" class="btn btn-outline-primary">Lihat Lapangan</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <div class="card h-100">
-                    <img src="https://pixabay.com/get/gf5df9d19e3336acac3fb143ea11c96fb3b295c7435a95ed9ada20ce8b8b50749201050718e0507cea461640a246810ca9725df59f6bb7e1d67d3befae32b0373_1280.jpg" class="card-img-top" alt="Lainnya">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Olahraga Lainnya</h5>
-                        <a href="{{ url_for('customer.fields') }}" class="btn btn-outline-primary">Lihat Semua</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Jenis Olahraga Populer</h2>
+      <p class="text-muted">
+        Berbagai jenis lapangan olahraga tersedia untuk kebutuhan Anda
+      </p>
     </div>
+
+    <div class="row g-4">
+      <div class="col-md-4 col-sm-6">
+        <div class="card h-100">
+          <img
+            src="https://pixabay.com/get/g46a448afc50ef22dff5c2431e1e25c4237ccb0ee5348a44980e11d1aaf93891b411aebcb41cf0f5db27119864f35a8468626c0ed77849b8cc7579a783af218b8_1280.jpg"
+            class="card-img-top"
+            alt="Futsal"
+          />
+          <div class="card-body text-center">
+            <h5 class="card-title">Futsal</h5>
+            <a
+              href="{{ url_for('customer.fields') }}?sport_type=Futsal"
+              class="btn btn-outline-primary"
+              >Lihat Lapangan</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-6">
+        <div class="card h-100">
+          <img
+            src="https://pixabay.com/get/ga829d74544027e300f0406adb4ea64aa2a6ca9429d7667d1f9080ecb87509ae43963c47b7851231d0e8cbde541fcaea5307d367b6ac4f53ac8061cfac39f00d8_1280.jpg"
+            class="card-img-top"
+            alt="Basket"
+          />
+          <div class="card-body text-center">
+            <h5 class="card-title">Basket</h5>
+            <a
+              href="{{ url_for('customer.fields') }}?sport_type=Basket"
+              class="btn btn-outline-primary"
+              >Lihat Lapangan</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-6">
+        <div class="card h-100">
+          <img
+            src="https://pixabay.com/get/g5cf1b58c229307cb7590b11f908553e0cac95a1ffaf865830adccdf7a48f3b53d4139d33bad07ca2debb388439e10ba69ce576515218090d706425ac1d5bf790_1280.jpg"
+            class="card-img-top"
+            alt="Badminton"
+          />
+          <div class="card-body text-center">
+            <h5 class="card-title">Badminton</h5>
+            <a
+              href="{{ url_for('customer.fields') }}?sport_type=Badminton"
+              class="btn btn-outline-primary"
+              >Lihat Lapangan</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-6">
+        <div class="card h-100">
+          <img
+            src="https://pixabay.com/get/gc98a1b1d9038dd3213281ef5f64fe2e29d554f08564204aeb4d6fa0cd8ef754ea64fa5da5bbddbf30592ad72a9b0e877a3ec1255fe921c434a0bb691c1bf230c_1280.jpg"
+            class="card-img-top"
+            alt="Tenis"
+          />
+          <div class="card-body text-center">
+            <h5 class="card-title">Tenis</h5>
+            <a
+              href="{{ url_for('customer.fields') }}?sport_type=Tenis"
+              class="btn btn-outline-primary"
+              >Lihat Lapangan</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-6">
+        <div class="card h-100">
+          <img
+            src="https://pixabay.com/get/g5df06333d3c85fc11d9f35090a36034f812ee6dcf19e4d2dc92c8535993bf2e606ef8ae551ff7b26b762131382bf990e4d97d1f2d5215ac9630f9164fbf8d74d_1280.jpg"
+            class="card-img-top"
+            alt="Voli"
+          />
+          <div class="card-body text-center">
+            <h5 class="card-title">Voli</h5>
+            <a
+              href="{{ url_for('customer.fields') }}?sport_type=Voli"
+              class="btn btn-outline-primary"
+              >Lihat Lapangan</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-6">
+        <div class="card h-100">
+          <img
+            src="https://pixabay.com/get/gf5df9d19e3336acac3fb143ea11c96fb3b295c7435a95ed9ada20ce8b8b50749201050718e0507cea461640a246810ca9725df59f6bb7e1d67d3befae32b0373_1280.jpg"
+            class="card-img-top"
+            alt="Lainnya"
+          />
+          <div class="card-body text-center">
+            <h5 class="card-title">Olahraga Lainnya</h5>
+            <a
+              href="{{ url_for('customer.fields') }}"
+              class="btn btn-outline-primary"
+              >Lihat Semua</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- Featured Fields Section -->
 <section class="container my-5">
-    <div class="text-center mb-5">
-        <h2 class="fw-bold">Lapangan Terbaru</h2>
-        <p class="text-muted">Temukan lapangan berkualitas untuk kebutuhan olahraga Anda</p>
+  <div class="text-center mb-5">
+    <h2 class="fw-bold">Lapangan Terbaru</h2>
+    <p class="text-muted">
+      Temukan lapangan berkualitas untuk kebutuhan olahraga Anda
+    </p>
+  </div>
+
+  <div class="row g-4">
+    {% if featured_fields %} {% for field in featured_fields %}
+    <div class="col-lg-4 col-md-6">
+      <div class="card h-100">
+        <div class="position-relative">
+          <img
+            src="{{ field.gambar_url }}"
+            class="card-img-top"
+            alt="{{ field.nama_lapangan }}"
+          />
+          <span class="badge bg-primary position-absolute top-0 end-0 m-2"
+            >{{ field.jenis_olahraga }}</span
+          >
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ field.nama_lapangan }}</h5>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-muted small">{{ field.toko.nama_toko }}</span>
+            <div
+              class="star-rating"
+              data-rating="{{ field.average_rating }}"
+            ></div>
+          </div>
+          <p class="card-text text-muted mb-2">
+            <i class="fas fa-map-marker-alt me-1"></i> {{ field.toko.lokasi }}
+          </p>
+          <p class="card-price mb-3">{{ field.formatted_price }} / jam</p>
+          <a
+            href="{{ url_for('customer.field_detail', field_id=field.id) }}"
+            class="btn btn-primary w-100"
+            >Lihat Detail</a
+          >
+        </div>
+      </div>
     </div>
-    
-    <div class="row g-4">
-        {% if featured_fields %}
-            {% for field in featured_fields %}
-                <div class="col-lg-4 col-md-6">
-                    <div class="card h-100">
-                        <div class="position-relative">
-                            <img src="{{ field.gambar_url }}" class="card-img-top" alt="{{ field.nama_lapangan }}">
-                            <span class="badge bg-primary position-absolute top-0 end-0 m-2">{{ field.jenis_olahraga }}</span>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ field.nama_lapangan }}</h5>
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="text-muted small">{{ field.toko.nama_toko }}</span>
-                                <div class="star-rating" data-rating="{{ field.average_rating }}"></div>
-                            </div>
-                            <p class="card-text text-muted mb-2">
-                                <i class="fas fa-map-marker-alt me-1"></i> {{ field.toko.lokasi }}
-                            </p>
-                            <p class="card-price mb-3">{{ field.formatted_price }} / jam</p>
-                            <a href="{{ url_for('customer.field_detail', field_id=field.id) }}" class="btn btn-primary w-100">Lihat Detail</a>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <div class="col-12">
-                <div class="alert alert-info">Belum ada lapangan yang tersedia. Silakan kembali nanti.</div>
-            </div>
-        {% endif %}
+    {% endfor %} {% else %}
+    <div class="col-12">
+      <div class="alert alert-info">
+        Belum ada lapangan yang tersedia. Silakan kembali nanti.
+      </div>
     </div>
-    
-    <div class="text-center mt-5">
-        <a href="{{ url_for('customer.fields') }}" class="btn btn-outline-primary btn-lg">Lihat Semua Lapangan</a>
-    </div>
+    {% endif %}
+  </div>
+
+  <div class="text-center mt-5">
+    <a
+      href="{{ url_for('customer.fields') }}"
+      class="btn btn-outline-primary btn-lg"
+      >Lihat Semua Lapangan</a
+    >
+  </div>
 </section>
 
 <!-- CTA Section - Owner -->
 <section class="bg-primary text-white py-5">
-    <div class="container text-center">
-        <h2 class="fw-bold mb-3">Punya Lapangan Olahraga?</h2>
-        <p class="lead mb-4">Daftarkan lapangan Anda dan dapatkan lebih banyak pelanggan dengan SportField</p>
-        <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg">Daftar Sebagai Pemilik Lapangan</a>
-    </div>
+  <div class="container text-center">
+    <h2 class="fw-bold mb-3">Punya Lapangan Olahraga?</h2>
+    <p class="lead mb-4">
+      Daftarkan lapangan Anda dan dapatkan lebih banyak pelanggan dengan
+      sportXpace
+    </p>
+    <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg"
+      >Daftar Sebagai Pemilik Lapangan</a
+    >
+  </div>
 </section>
 
 <!-- How It Works Section -->
 <section class="container my-5">
-    <div class="text-center mb-5">
-        <h2 class="fw-bold">Cara Kerja</h2>
-        <p class="text-muted">Proses booking lapangan yang mudah dan cepat</p>
+  <div class="text-center mb-5">
+    <h2 class="fw-bold">Cara Kerja</h2>
+    <p class="text-muted">Proses booking lapangan yang mudah dan cepat</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 text-center">
+      <div class="mb-4">
+        <div
+          class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center"
+          style="width: 80px; height: 80px"
+        >
+          <i class="fas fa-search fa-2x text-primary"></i>
+        </div>
+      </div>
+      <h5>Cari Lapangan</h5>
+      <p class="text-muted">
+        Temukan lapangan olahraga yang sesuai dengan kebutuhan Anda.
+      </p>
     </div>
-    
-    <div class="row">
-        <div class="col-md-3 text-center">
-            <div class="mb-4">
-                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                    <i class="fas fa-search fa-2x text-primary"></i>
-                </div>
-            </div>
-            <h5>Cari Lapangan</h5>
-            <p class="text-muted">Temukan lapangan olahraga yang sesuai dengan kebutuhan Anda.</p>
+    <div class="col-md-3 text-center">
+      <div class="mb-4">
+        <div
+          class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center"
+          style="width: 80px; height: 80px"
+        >
+          <i class="fas fa-calendar-alt fa-2x text-primary"></i>
         </div>
-        <div class="col-md-3 text-center">
-            <div class="mb-4">
-                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                    <i class="fas fa-calendar-alt fa-2x text-primary"></i>
-                </div>
-            </div>
-            <h5>Pilih Jadwal</h5>
-            <p class="text-muted">Pilih tanggal dan jam yang tersedia sesuai keinginan Anda.</p>
-        </div>
-        <div class="col-md-3 text-center">
-            <div class="mb-4">
-                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                    <i class="fas fa-credit-card fa-2x text-primary"></i>
-                </div>
-            </div>
-            <h5>Lakukan Pembayaran</h5>
-            <p class="text-muted">Bayar dengan metode pembayaran yang tersedia.</p>
-        </div>
-        <div class="col-md-3 text-center">
-            <div class="mb-4">
-                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                    <i class="fas fa-check-circle fa-2x text-primary"></i>
-                </div>
-            </div>
-            <h5>Konfirmasi Instan</h5>
-            <p class="text-muted">Dapatkan konfirmasi booking secara instan melalui email.</p>
-        </div>
+      </div>
+      <h5>Pilih Jadwal</h5>
+      <p class="text-muted">
+        Pilih tanggal dan jam yang tersedia sesuai keinginan Anda.
+      </p>
     </div>
+    <div class="col-md-3 text-center">
+      <div class="mb-4">
+        <div
+          class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center"
+          style="width: 80px; height: 80px"
+        >
+          <i class="fas fa-credit-card fa-2x text-primary"></i>
+        </div>
+      </div>
+      <h5>Lakukan Pembayaran</h5>
+      <p class="text-muted">Bayar dengan metode pembayaran yang tersedia.</p>
+    </div>
+    <div class="col-md-3 text-center">
+      <div class="mb-4">
+        <div
+          class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center"
+          style="width: 80px; height: 80px"
+        >
+          <i class="fas fa-check-circle fa-2x text-primary"></i>
+        </div>
+      </div>
+      <h5>Konfirmasi Instan</h5>
+      <p class="text-muted">
+        Dapatkan konfirmasi booking secara instan melalui email.
+      </p>
+    </div>
+  </div>
 </section>
 
 <!-- Payment Methods Section -->
 <section class="bg-light py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">Metode Pembayaran</h2>
-            <p class="text-muted">Berbagai metode pembayaran yang aman dan terpercaya</p>
-        </div>
-        
-        <div class="row justify-content-center">
-            <div class="col-md-3 col-6 text-center mb-4">
-                <img src="https://pixabay.com/get/ga096b93f55681bdc5c17fda57bea8c2999baf5de8e3c2ad536e58214d4f8c08f965850809634d7927588231501ca48c66f3043b1d359d7485affd1d5faea06b1_1280.jpg" alt="Transfer Bank" class="img-fluid mb-3" style="max-height: 100px;">
-                <h5>Transfer Bank</h5>
-            </div>
-            <div class="col-md-3 col-6 text-center mb-4">
-                <img src="https://pixabay.com/get/gc1128eff2b7b6b230b4c71b8d435a50f31b384c99cd8b540c7ae0df844ae4eb3ea11da94700372c843a9839846ac8e61b608e658755b70772c7ee9970c63635c_1280.jpg" alt="E-Wallet" class="img-fluid mb-3" style="max-height: 100px;">
-                <h5>E-Wallet</h5>
-            </div>
-            <div class="col-md-3 col-6 text-center mb-4">
-                <img src="https://pixabay.com/get/g603068a0b629a3f27d2d3647cbf06ba0cfeb37c0aa5bb36f35c5c1b722aa4a5be5499ff891b54d231c8dcb2fc4dff3a20b65e9390cf63443de627b22b9129a21_1280.jpg" alt="Kartu Kredit" class="img-fluid mb-3" style="max-height: 100px;">
-                <h5>Kartu Kredit</h5>
-            </div>
-            <div class="col-md-3 col-6 text-center mb-4">
-                <img src="https://pixabay.com/get/g598484a7c50227954291ce2af032db0564f15a3a20c53034b640f411fc035a2b94d45f46094bb3a9f9518b302a010f43470e03f2355989aca551c24164a17858_1280.jpg" alt="Tunai" class="img-fluid mb-3" style="max-height: 100px;">
-                <h5>Tunai</h5>
-            </div>
-        </div>
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Metode Pembayaran</h2>
+      <p class="text-muted">
+        Berbagai metode pembayaran yang aman dan terpercaya
+      </p>
     </div>
+
+    <div class="row justify-content-center">
+      <div class="col-md-3 col-6 text-center mb-4">
+        <img
+          src="https://pixabay.com/get/ga096b93f55681bdc5c17fda57bea8c2999baf5de8e3c2ad536e58214d4f8c08f965850809634d7927588231501ca48c66f3043b1d359d7485affd1d5faea06b1_1280.jpg"
+          alt="Transfer Bank"
+          class="img-fluid mb-3"
+          style="max-height: 100px"
+        />
+        <h5>Transfer Bank</h5>
+      </div>
+      <div class="col-md-3 col-6 text-center mb-4">
+        <img
+          src="https://pixabay.com/get/gc1128eff2b7b6b230b4c71b8d435a50f31b384c99cd8b540c7ae0df844ae4eb3ea11da94700372c843a9839846ac8e61b608e658755b70772c7ee9970c63635c_1280.jpg"
+          alt="E-Wallet"
+          class="img-fluid mb-3"
+          style="max-height: 100px"
+        />
+        <h5>E-Wallet</h5>
+      </div>
+      <div class="col-md-3 col-6 text-center mb-4">
+        <img
+          src="https://pixabay.com/get/g603068a0b629a3f27d2d3647cbf06ba0cfeb37c0aa5bb36f35c5c1b722aa4a5be5499ff891b54d231c8dcb2fc4dff3a20b65e9390cf63443de627b22b9129a21_1280.jpg"
+          alt="Kartu Kredit"
+          class="img-fluid mb-3"
+          style="max-height: 100px"
+        />
+        <h5>Kartu Kredit</h5>
+      </div>
+      <div class="col-md-3 col-6 text-center mb-4">
+        <img
+          src="https://pixabay.com/get/g598484a7c50227954291ce2af032db0564f15a3a20c53034b640f411fc035a2b94d45f46094bb3a9f9518b302a010f43470e03f2355989aca551c24164a17858_1280.jpg"
+          alt="Tunai"
+          class="img-fluid mb-3"
+          style="max-height: 100px"
+        />
+        <h5>Tunai</h5>
+      </div>
+    </div>
+  </div>
 </section>
 {% endblock %}
