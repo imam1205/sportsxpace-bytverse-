@@ -51,6 +51,14 @@ login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 login_manager.login_message_category = 'info'
 
+# Custom Jinja2 filters
+def format_number(value):
+    try:
+        return "{:,.0f}".format(value).replace(",", ".")
+    except (ValueError, TypeError):
+        return "0"
+    
+app.jinja_env.filters['format_number'] = format_number
 # Import models and routes
 with app.app_context():
     from models import User

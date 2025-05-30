@@ -278,12 +278,32 @@ def my_bookings():
 @customer_bp.route('/profile')
 @login_required
 def profile():
-    return render_template('customer/profile.html',
-                           title='Profil Saya')
+    # Ambil semua booking dan rating user, lalu urutkan terbaru
+    all_bookings = sorted(current_user.pemesanans, key=lambda x: x.created_at, reverse=True)
+    all_ratings = sorted(current_user.ratings, key=lambda x: x.created_at, reverse=True)
 
-@customer_bp.route('/field/<int:field_id>/rate', methods=['GET', 'POST'])
-@login_required
-@customer_required
+    # Ambil 3 terbaru
+    recent_bookings = all_bookings[:3]
+    recent_ratings = all_ratings[:3]
+
+    return render_template(
+        'customer/profile.html',
+        title='Profil Saya',
+        recent_bookings=recent_bookings,
+        recent_ratings=recent_ratings
+    )
+
+
+
+# @customer_bp.route('/profile')
+# @login_required
+# def profile():
+#     return render_template('customer/profile.html',
+#                            title='Profil Saya')
+
+# @customer_bp.route('/field/<int:field_id>/rate', methods=['GET', 'POST'])
+# @login_required
+# @customer_required
 def rate_field(field_id):
     lapangan = Lapangan.query.get_or_404(field_id)
     

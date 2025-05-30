@@ -7,7 +7,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
-    nama = db.Column(db.String(64), nullable=False)
+    name = db.Column(db.String(64), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
     role = db.Column(db.String(20), nullable=False)  # 'Toko' or 'Pembeli'
@@ -30,6 +30,7 @@ class User(UserMixin, db.Model):
     
 class Toko(db.Model):
     __tablename__ = 'tokos'
+
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -39,17 +40,17 @@ class Toko(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
-    lapangans = db.relationship('Lapangan', backref='toko', lazy=True)
+    lapangans = db.relationship('Lapangan', backref='store', lazy=True)
     
     def __repr__(self):
         return f'<Toko {self.nama_toko}>'
 
 
 class Lapangan(db.Model):
-    __tablename__ = 'lapangans'
+    __tablename__ = 'fields'
     
     id = db.Column(db.Integer, primary_key=True)
-    toko_id = db.Column(db.Integer, db.ForeignKey('tokos.id'), nullable=False)
+    toko_id = db.Column(db.Integer, db.ForeignKey('tokos.id'), nullable=False) # Diperbaiki
     nama_lapangan = db.Column(db.String(100), nullable=False)
     jenis_olahraga = db.Column(db.String(50), nullable=False)
     harga = db.Column(db.Integer, nullable=False)
@@ -59,7 +60,7 @@ class Lapangan(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
-    pemesanans = db.relationship('Pemesanan', backref='lapangan', lazy=True)
+    pemesanans = db.relationship('Pemesanan', backref='bookings', lazy=True)
     ratings = db.relationship('Rating', backref='lapangan', lazy=True)
     
     def __repr__(self):
@@ -69,8 +70,11 @@ class Lapangan(db.Model):
     def average_rating(self):
         if not self.ratings:
             return 0
-        return sum(r.skor for r in self.ratings) / len(self.ratings)
-    
+        count = len(self.ratings)
+        if count == 0:
+            return 0
+        return sum(r.skor for r in self.ratings) / count
+
     @property
     def formatted_price(self):
         return f'Rp {self.harga:,}'
@@ -81,7 +85,8 @@ class Pemesanan(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    lapangan_id = db.Column(db.Integer, db.ForeignKey('lapangans.id'), nullable=False)
+    pembayarans = db.relationship('Pembayaran', backref='pemesanan')
+    lapangan_id = db.Column(db.Integer, db.ForeignKey('fields.id'), nullable=False)
     tanggal_booking = db.Column(db.Date, nullable=False)
     jam_booking_mulai = db.Column(db.Time, nullable=False)
     jam_booking_selesai = db.Column(db.Time, nullable=False)
@@ -89,14 +94,14 @@ class Pemesanan(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
-    pembayarans = db.relationship('Pembayaran', backref='pemesanan', lazy=True)
+    pembayarans = db.relationship('Pembayaran', backref='bookings', lazy=True)
     
     def __repr__(self):
         return f'<Pemesanan {self.id}>'
 
 
 class Pembayaran(db.Model):
-    __tablename__ = 'pembayarans'
+    __tablename__ = 'payments'
     
     id = db.Column(db.Integer, primary_key=True)
     pemesanan_id = db.Column(db.Integer, db.ForeignKey('pemesanans.id'), nullable=False)
@@ -104,6 +109,9 @@ class Pembayaran(db.Model):
     jumlah = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), default='Pending')  # Pending, Success, Failed
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    pemesanan = db.relationship('Pemesanan', backref='pembayaran', lazy=True)
     
     def __repr__(self):
         return f'<Pembayaran {self.id}>'
@@ -114,10 +122,11 @@ class Rating(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    lapangan_id = db.Column(db.Integer, db.ForeignKey('lapangans.id'), nullable=False)
-    skor = db.Column(db.Integer, nullable=False)
-    komentar = db.Column(db.Text)
+    field_id = db.Column(db.Integer, db.ForeignKey('fields.id'), nullable=False)
+    score = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     def __repr__(self):
         return f'<Rating {self.id}>'
+    
